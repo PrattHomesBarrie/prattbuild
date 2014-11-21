@@ -1,0 +1,410 @@
+<html>
+<head>
+ 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="description" content="SOAP web service testing tool that allows a user to call on web service methods defined in a WSDL, and view the responses and potential faults/errors." /> 
+  <meta name="keywords" content="soap, wsdl, web service, webservice, xml, tester, wsdl tester, wsdl validator, testing tool, validator, soap tester, soap validator, soap testing tool, web service tester, soap web service tester, plum voice" /> 
+  <title>Plum Voice :: SOAP Web Service Testing Tool</title>
+  <!-- Reference the stylesheets -->
+  <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="Stylesheet" />	
+  <link type="text/css" href="css/main.css" rel="Stylesheet" />
+  <link rel="stylesheet" href="css/prettyPhoto.css" type="text/css" media="screen" charset="utf-8" />
+</head>
+<body>
+<!-- Reference jQuery and jQueryUI -->
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.scrollTo-min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+<script src="js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+
+// functionality for submitting the form containing the WSDL
+$(function() {
+	$("#wsdlForm").submit(function() {
+		var wsdl = $("#wsdl_url").val();
+
+		if( wsdl != '' )
+		{
+			clearParamVals(  ); 
+			clearReturnVals(  ); 
+			setWSDL( wsdl );
+		}
+		return false;
+	});
+});
+
+$(document).ready(function(){
+			$("a[rel^='prettyPhoto']").prettyPhoto();
+		});
+
+// functionality for submitting the form containing the parameters
+$(function() {
+	$("#input_id").submit(function() {
+		var theform = document.getElementById( 'input_id' );
+		sendArguments( theform );
+		return false;
+	});
+});
+
+/* functionality to toggle the showing/hiding of the divs containing the various return values
+   also set the styles for the buttons and set the default WSDL field text */
+$( document ).ready(function() {
+	wsdlvar = "Enter WSDL Here";
+	document.getElementById( 'wsdl_url' ).value = wsdlvar;
+	if (wsdlvar != "Enter WSDL Here"){
+	  $("#wsdlForm").submit();
+	}
+	$( "#btn-getMeth" ).button();
+	$( 'div.return_box> div' ).hide();
+	$( 'div.header_control_box> h3' ).hide();
+	$( 'div.return_box' ).hide();
+	$( 'div.return_box> h3' ).click(function() {
+		var id = $( this ).attr( 'id' ) + 'Span';
+		if( $( "#" + id ).hasClass( 'ui-icon-circle-plus' ) )
+		{
+			$( "#" + id ).removeClass( 'ui-icon-circle-plus' ).addClass( 'ui-icon-circle-minus' );
+		} else {
+			$( "#" + id ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+		}
+		$( this ).next(  ).slideToggle( 'fast' , function(){
+			$.scrollTo( this , 'slow' );
+		} );
+	});
+
+	$( 'div.header_control_box> h3' ).click(function() {
+		var id = $( this ).attr( 'id' ) + 'Span';
+		if( $( "#" + id ).hasClass( 'ui-icon-circle-plus' ) )
+		{
+			$( "#" + id ).removeClass( 'ui-icon-circle-plus' ).addClass( 'ui-icon-circle-minus' );
+		} else {
+			$( "#" + id ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+		}
+		$( this ).next(  ).slideToggle( 'fast' , function(){
+
+		} );
+	});
+
+	$.ajaxSetup ({  
+		cache: false  
+	});
+	$( "#loadingImage" ).hide();
+});
+
+</script>
+<script language="javascript">
+
+// Set the default value of the text field to the string "Enter WSDL Here"
+function setWSDLText(  )
+{
+	document.getElementById( 'wsdl_url' ).value = "Enter WSDL Here";
+	document.getElementById('paramVals').style.display = "none";
+	document.getElementById('retVals').style.display = "none";
+}
+
+// Deprecated - shouldn't need this anymore since we are not using any GET variables on this page
+function getUrlVars(  )
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ).split( '&' );
+ 
+	for( var i = 0 ; i < hashes.length ; i++ )
+	{
+		hash = hashes[i].split( '=' );
+		vars.push( hash[0] );
+		vars[hash[0]] = hash[1];
+	}
+ 
+	return vars;
+}
+
+// This function will display the available parameters for the selected function via AJAX
+function getFunctionParams( sel )
+{
+	var value = sel.options[sel.selectedIndex].value; 
+	if( value != "no" )
+	{
+		var hash = getUrlVars(  );
+		var wsdl = document.getElementById( 'wsdl_url' ).value;
+		global_wsdl_url = wsdl;
+
+		if( navigator.appName == "Microsoft Internet Explorer" )
+		{
+			http = new ActiveXObject( "Microsoft.XMLHTTP" );
+		} else {
+			http = new XMLHttpRequest();
+		}
+  
+	http.abort();
+	$( "#loadingImage" ).show();
+	http.open( "GET" , "html/getargs.php?fname=" + value + "&wsdl=" + wsdl , true );
+	http.onreadystatechange=function(  ) {
+		if( http.readyState == 4 ) {
+			$( "#loadingImage" ).hide();
+			document.getElementById( 'paramVals' ).innerHTML = http.responseText;
+			$( "#paramVals" ).fadeIn( 'normal' );
+			$( "#headerCntrl" ).fadeIn( 'normal' );
+			$( "#headerControlHeader" ).fadeIn( 'normal' );
+			$( "#btn-Send" ).button();
+			$( "#retValsHeader" ).hide();
+			$( "#retVals" ).hide();
+			$( "#soapFaultHeader" ).hide();
+			$( "#soapFault" ).hide();
+			$( "#soapRequestHeaderHeader" ).hide();
+			$( "#soapRequestHeader" ).hide();
+			$( "#soapRequestEnvHeader" ).hide();
+			$( "#soapRequestEnv" ).hide();
+			$( "#soapResponseEnvHeader" ).hide();
+			$( "#soapResponseEnv" ).hide();
+			$( 'div.return_box' ).hide();
+		}
+	}
+		http.send( null );
+	} else { 
+		clearParamVals(  ); 
+	}	
+}
+
+// A helper function to slide in and reset the +/- icons for the return divs
+function resetReturns(  )
+{
+	$( "#soapFault" ).slideUp(  );
+	$( "#soapFaultHeaderSpan" ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+	$( "#soapRequestHeader" ).slideUp(  );
+	$( "#soapRequestHeaderHeaderSpan" ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+	$( "#soapRequestEnv" ).slideUp(  );
+	$( "#soapRequestEnvHeaderSpan" ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+	$( "#soapResponseHeader" ).slideUp(  );
+	$( "#soapResponseHeaderHeaderSpan" ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+	$( "#soapResponseEnv" ).slideUp(  );
+	$( "#soapResponseEnvHeaderSpan" ).removeClass( 'ui-icon-circle-minus' ).addClass( 'ui-icon-circle-plus' );
+	$( "#retValsHeaderSpan" ).removeClass( 'ui-icon-circle-plus' ).addClass( 'ui-icon-circle-minus' );
+}
+
+// This function gets the values of the inputs for available parameters, sends them to the back-end via AJAX, and displays the output he sends back
+function sendArguments( form ) 
+{
+	var callws= "lib/callWS.php?soap-7586-version="+document.getElementById('versionSelect').value + "&";
+	if( document.getElementById('headerControlName').value != '' && 
+	    document.getElementById('headerControlNS').value != '' &&
+	    document.getElementById('headerControlUser').value != '' &&
+	    document.getElementById('headerControlPass').value != ''
+	  ){
+	      callws = callws + "soap-7586-headerControlName="+document.getElementById('headerControlName').value+"&";
+	      callws = callws + "soap-7586-headerControlNS="+document.getElementById('headerControlNS').value+"&";
+	      callws = callws + "soap-7586-headerControlUser="+document.getElementById('headerControlUser').value+"&";
+	      callws = callws + "soap-7586-headerControlPass="+document.getElementById('headerControlPass').value;
+	    }
+
+	for( i=0 ; i < document.input.elements.length-1 ; i++ )
+	{
+		callws = callws + "&" + document.input.elements[i].name + "=" + document.input.elements[i].value;
+	}
+
+	if( navigator.appName == "Microsoft Internet Explorer" ) 
+	{
+		http = new ActiveXObject( "Microsoft.XMLHTTP" );
+	} else {
+		http = new XMLHttpRequest(  );
+	}
+	http.abort(  );
+	$( "#loadingImage" ).show();
+	http.open( "GET" , callws , true);
+	http.onreadystatechange=function(  ) {
+	if( http.readyState == 4 ) 
+	{
+		$( "#loadingImage" ).hide();
+		resetReturns(  );
+		var obj = jQuery.parseJSON( http.responseText );
+
+		document.getElementById( 'retVals' ).innerHTML =  obj.result;
+		document.getElementById( 'soapFault' ).innerHTML = obj.fault_message;
+		document.getElementById( 'soapRequestHeader' ).innerHTML = obj.request_header;
+		document.getElementById( 'soapResponseHeader' ).innerHTML = obj.response_header;
+		document.getElementById( 'soapRequestEnv' ).innerHTML = obj.request;
+		document.getElementById( 'soapResponseEnv' ).innerHTML = obj.response;
+		$( 'div.return_box' ).fadeIn( 'normal' );
+		$( "#retValsHeader" ).fadeIn( 'normal' );
+		$( "#retVals" ).fadeIn( 'normal' );
+
+		$( "#soapFaultHeader" ).fadeIn( 'normal' );
+		if( obj.fault == true )
+		{
+			$( "#soapFaultHeaderSpan" ).removeClass( 'ui-icon-circle-plus' ).addClass( 'ui-icon-circle-minus' );
+			$( "#soapFault" ).fadeIn( 'normal' );
+		}
+		$( "#soapRequestHeaderHeader" ).fadeIn( 'normal' );
+
+		$( "#soapResponseHeaderHeader" ).fadeIn( 'normal' );
+
+		$( "#soapResponseEnvHeader" ).fadeIn( 'normal' );
+
+		$( "#soapRequestEnvHeader" ).fadeIn( 'normal' );
+	}
+	}
+	http.send( null );
+}
+
+// This function will get the value of the WSDL from the text field, and will dynamically add and populate a drop-down menu below via AJAX that
+// contains a list of available functions for the entered WSDL
+function setWSDL( url ) 
+{
+	var wsdl = url;
+
+	if( navigator.appName == "Microsoft Internet Explorer" ) 
+	{
+		http = new ActiveXObject( "Microsoft.XMLHTTP" );
+	} else {
+		http = new XMLHttpRequest(  );
+	}
+	http.abort();
+	$( "#loadingImage" ).show();
+	http.open( "GET" , "html/setwsdl.php?WSDL=" + wsdl , true );
+	http.onreadystatechange=function(  ) {
+		if( http.readyState == 4 ) 
+		{
+			$( "#loadingImage" ).hide();
+			document.getElementById( 'methSel' ).innerHTML = http.responseText;
+			$( "#methSel" ).fadeIn( 'normal' );
+		}
+	}
+	http.send( null );
+}
+
+// Clears the return values on the screen
+function clearReturnVals(  ) 
+{  
+	document.getElementById( 'retVals' ).innerHTML = '';
+	document.getElementById('retVals').style.display = "none";
+	$( "#retValsHeader" ).hide();
+	$( "#soapFaultHeader" ).hide();
+	$( "#soapFault" ).hide();
+	$( "#soapRequestHeaderHeader" ).hide();
+	$( "#soapRequestHeader" ).hide();
+	$( "#soapRequestEnvHeader" ).hide();
+	$( "#soapRequestEnv" ).hide();
+	$( "#soapResponseHeaderHeader" ).hide();
+	$( "#soapResponseHeader" ).hide();
+	$( "#soapResponseEnvHeader" ).hide();
+	$( "#soapResponseEnv" ).hide();
+	$( 'div.return_box' ).hide();
+}
+
+// Clears the parameter fields/values on the screen
+function clearParamVals(  ) 
+{  
+	document.getElementById( 'paramVals' ).innerHTML = '';
+	document.getElementById( 'paramVals' ).style.display = "none";
+	document.getElementById( 'headerControl' ).style.display = "none";
+	document.getElementById( 'headerControlHeader' ).style.display = "none";
+	document.getElementById( 'headerCntrl' ).style.display = "none";
+	document.getElementById('headerControlName').value = ''; 
+	document.getElementById('headerControlNS').value = '';
+	document.getElementById('headerControlUser').value = '';
+	document.getElementById('headerControlPass').value = '';
+}
+</script>
+
+<!-- Begin HTML for the actual page -->
+<div class="wrapper">
+<div id="header">
+  <div id="header_left">
+    <a href="http://www.plumvoice.com" target="_blank" style="border: none;"><img src="images/plumvoice.gif" style="border: none;" /></a>
+  </div>
+  <div id="header_right">
+    <span>Connect with us:</span>
+    <script src="http://www.stumbleupon.com/hostedbadge.php?s=5"></script>
+    <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fplumvoice.com%2Fsoaptester&amp;layout=box_count&amp;show_faces=false&amp;width=90&amp;action=like&amp;colorscheme=light&amp;height=65" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:60px; width:50px;" allowTransparency="true"></iframe>
+    <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <a href="widgets.php" title="Add your own widget!"><img src="images/widget-icon.png" alt="Add your widget!" border="0" style="vertical-align: top; margin: 0 5px;" /></a>
+  </div>
+  <div class="clearer"></div>
+  <div id="header_bottom" style="color: #511A51;">
+    <div style="background: #F0EDEF; border: 1px solid #BBB8CF; float: left; width:640px; margin-bottom: 5px; padding: 5px;">
+The SOAP Web Service Testing Tool is a valuable resource for performing simple validation and testing of your SOAP-based web service.<br />
+For help, click <a href="html/docs.html?iframe=true&width=100%&height=100%" rel="prettyPhoto[iframes]" style="color: #333; font-family: Arial, Helvetica, sans-serif;"><span style="font-weight: bold; color: #511A51;">Here</span></a>
+  </div>
+  </div>
+</div>
+<!-- the form for submitting the WSDL -->
+<form id="wsdlForm" name="input1" method="post">
+<input type="text" id="wsdl_url" class="textfield_effect" name="wsdl" value="Enter WSDL Here" onFocus="if(this.value == 'Enter WSDL Here') {this.value='';}" onBlur="if(this.value == '') {this.value='Enter WSDL Here';}" />
+<input type="submit" id="btn-getMeth" style="height: 35px;" value="Get Methods" />
+</form>
+<div id="loadingImage" style="display: inline;"><img src="images/ajax-loader.gif" /></div>
+
+<!-- Here are all the divs that will contain the various return values -->
+<div id="container">
+
+<div id="methSel" style="display: none; margin-top: 15px; margin-left: 0;"></div>
+
+<!-- This is the div for header controls -->
+<div id="headerCntrl" class="header_control_box" style="display: none;">
+<h3 id="headerControlHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="headerControlHeaderSpan" class="ui-icon ui-icon-circle-plus" style="float: left; margin-right: 0;"></span><b>Custom Headers</b></h3>
+<div id="headerControl" style="display: none; background-color: #F0EDEF; ">
+<form id="headerControlForm" style="padding: 10px 20px 10px 27px;">
+<div class="row"><span class="label"><b>Header Name </b></span><span class="formw"><input id="headerControlName" type="text" /></span></div><br />
+<div class="row"><span class="label"><b>Namespace </b></span><span class="formw"><input id="headerControlNS" type="text" /></span></div><br />
+<div class="row"><span class="label"><b>UserName </b></span><span class="formw"><input id="headerControlUser" type="text" /></span></div><br />
+<div class="row"><span class="label"><b>Password </b></span><span class="formw"><input id="headerControlPass" type="password" /></span></div><br />
+</form>
+</div>
+</div>
+
+<br />
+
+<div id="paramVals" class="shaded_bounded_box" style="width: 550px; display: none;"></div>
+<br />
+
+<div class="return_box">
+<h3 id="retValsHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="retValsHeaderSpan" class="ui-icon ui-icon-circle-minus" style="float: left; margin-right: 0;"></span><b>Return Values</b></h3>
+<div id="retVals" style="padding: 10px 20px 10px 27px; display: none;"></div>
+</div>
+
+<br />
+
+<div class="return_box">
+<h3 id="soapFaultHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="soapFaultHeaderSpan" class="ui-icon ui-icon-circle-plus" style="float: left; margin-right: 0;"></span><b>SOAP Fault</b></h3>
+<div id="soapFault" style="padding: 10px 20px 10px 27px; display: none;"></div>
+</div>
+
+<br />
+
+<div class="return_box">
+<h3 id="soapRequestHeaderHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="soapRequestHeaderHeaderSpan" class="ui-icon ui-icon-circle-plus" style="float: left; margin-right: 0;"></span><b>Request Header</b></h3>
+<div id="soapRequestHeader" style="padding: 10px 20px 10px 27px; display: none;"></div>
+</div>
+
+<br />
+
+<div class="return_box">
+<h3 id="soapRequestEnvHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="soapRequestEnvHeaderSpan" class="ui-icon ui-icon-circle-plus" style="float: left; margin-right: 0;"></span><b>SOAP Request Envelope</b></h3>
+<div id="soapRequestEnv" style="padding: 10px 20px 10px 27px; display: none;"></div>
+</div>
+
+<br />
+
+<div class="return_box">
+<h3 id="soapResponseHeaderHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="soapResponseHeaderHeaderSpan" class="ui-icon ui-icon-circle-plus" style="float: left; margin-right: 0;"></span><b>Response Header</b></h3>
+<div id="soapResponseHeader" style="padding: 10px 20px 10px 27px; display: none;"></div>
+</div>
+
+<br />
+
+<div class="return_box">
+<h3 id="soapResponseEnvHeader" style="margin-top: 0px; margin-bottom: 0px;"><span id="soapResponseEnvHeaderSpan" class="ui-icon ui-icon-circle-plus" style="float: left; margin-right: 0;"></span><b>SOAP Response Envelope</b></h3>
+<div id="soapResponseEnv" style="padding: 10px 20px 10px 27px; display: none;"></div>
+</div>
+
+</div>
+
+<div class="spacer" style="margin-bottom: 20px;"></div>
+</div>
+
+<div class="footer">
+<p align="center">Copyright &copy; 2011 <a href="http://www.plumvoice.com/" target="_blank">Plum Voice</a></p>
+</div>
+
+</body>
+</html>
+

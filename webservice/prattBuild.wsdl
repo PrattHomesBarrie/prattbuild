@@ -1,0 +1,64 @@
+<?xml version ='1.0' encoding ='UTF-8' ?>
+<definitions name='Scramble' 
+  targetNamespace='http://www.softmv.com/PrattBuild/webservice/prattBuild.wdsl' 
+  xmlns:tns='http://www.softmv.com/PrattBuild/webservice/prattBuild.wdsl' 
+  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' 
+  xmlns='http://schemas.xmlsoap.org/wsdl/'> 
+
+<message name='getLotInfoRequest'> 
+  <part name='symbol' type='xsd:string'/> 
+</message> 
+<message name='getLotInfoResponse'> 
+  <part name='Result' type='xsd:string'/> 
+</message> 
+<message name='getMirrorRequest'> 
+  <part name='symbol' type='xsd:string'/> 
+</message> 
+<message name='getMirrorResponse'> 
+  <part name='Result' type='xsd:string'/> 
+</message> 
+
+<portType name='ScramblePortType'> 
+  <operation name='getLotInfo'>
+    <input message='tns:getLotInfoRequest'/> 
+    <output message='tns:getLotInfoResponse'/>   
+  </operation>
+  <operation name='getMirror'>
+    <input message='tns:getMirrorRequest'/> 
+    <output message='tns:getMirrorResponse'/>   
+  </operation>    
+</portType> 
+
+<binding name='ScrambleBinding' type='tns:ScramblePortType'> 
+  <soap:binding style='rpc' 
+    transport='http://schemas.xmlsoap.org/soap/http'/> 
+  <operation name='getLotInfo'> 
+    <soap:operation soapAction='urn:localhost-scramble#getLotInfo'/> 
+    <input> 
+      <soap:body use='encoded' namespace='urn:localhost-scramble' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </input> 
+    <output> 
+      <soap:body use='encoded' namespace='urn:localhost-scramble' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </output> 
+  </operation>
+  <operation name='getMirror'> 
+    <soap:operation soapAction='urn:localhost-scramble#getMirror'/> 
+    <input> 
+      <soap:body use='encoded' namespace='urn:localhost-scramble' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </input> 
+    <output> 
+      <soap:body use='encoded' namespace='urn:localhost-scramble' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </output> 
+  </operation>       
+</binding> 
+
+<service name='ScrambleService'> 
+  <port name='ScramblePort' binding='ScrambleBinding'> 
+    <soap:address location='http://www.softmv.com/PrattBuild/webservice/prattBuild-server.php'/> 
+  </port> 
+</service>
+</definitions>
