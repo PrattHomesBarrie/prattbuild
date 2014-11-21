@@ -8,13 +8,7 @@
 	{
 		if(isset($_GET["lotNumber"])or isset($_GET["siteShortName"]))
 		{
-			if(isset($_GET["lotNumber"]))
-			{
-				require_once ("po_lot_detail.php");
-			}
-			else {
-				require_once ("po_detail.php");
-			}
+			require_once ("po_detail.php");		
 		
 		}
 		else

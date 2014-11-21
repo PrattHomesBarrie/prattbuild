@@ -15,7 +15,9 @@ $(document).ready(function() {
                } );    
 */
 </SCRIPT>
-<? echo ' - Site: <b>'.$_GET["siteName"].'</b>'?>
+<? echo ' - Site: <b>'.$_GET["siteName"].'</b>';
+ if(isset($_GET["lotNumber"]))
+ echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';?>
 <small><br>Note: Click on a column title to sort by that column</small>
 
 <ul class="tabs">	
