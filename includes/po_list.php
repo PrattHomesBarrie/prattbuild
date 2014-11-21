@@ -13,16 +13,25 @@
 </SCRIPT>
 
 <small><br>Note: Click on a column title to sort by that column</small>
+<ul class="tabs">	
+	<li class="current">
+		<a href="#">Outstanding</a>
+	</li>
+	<li>
+		<a href="#">Completed</a>
+	</li>
+</ul>
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 <thead>
   <tr>
 	<th align="center">Lot</th>
 	<th align="center" style="width:170px !important;">Site</th>
-    <th align="center">Model on Offer<br />
-      (or Designated Model)</th>
-	 <th align="center" style="width:300px !important;">Customer's Name</th>
-	 <th align="center" style="width:300px !important;">Address</th>
-    <th align="center" style="width:100px !important;">Completion Date</th>
+	<th align="center">Created Date</th>
+	<th align="center" style="width:150px !important;">Trade</th>
+	<th align="center">Type</th>
+	<th align="center" style="width:300px !important;">Description</th>
+    <th align="center" >RTO Date</th>
+	<th align="center">Completion Date</th>
 </tr>
 </thead>
 <?php
@@ -63,33 +72,17 @@ if ($db2->Query($query)) {
 	while ($resultRow = $db2->Row() ) {
 		echo '<tr>';
 		echo '<td class="lotLinkCellInTable" ><a href="index.php?myAction=PO&lotNumber='.$resultRow->lotNumber.'&siteShortName='.$resultRow->siteShortName.'&siteName='.$resultRow->siteName.'">';
-		echo '<b>'.$resultRow->siteShortName.'</b>-';
-		echo '<b>'.str_pad($resultRow->lotNumber,4,'0',STR_PAD_LEFT).'</b>';
+		echo '<small>'.$resultRow->siteShortName.'</small>-';
+		echo '<strong>'.str_pad($resultRow->lotNumber,4,'0',STR_PAD_LEFT).'</strong>';
 		echo '</a></td>';
+		
 		echo '<td class="lotLinkCellInTable" align="center"><a href="index.php?myAction=PO&siteShortName='.$resultRow->siteShortName.'&siteName='.$resultRow->siteName.'"><b>'.$resultRow->siteName.'</b></a></td>';
-		echo '<td align="center">' ;
-		$modelName =  '-';
-		if ($resultRow->modelName > '') {
-			$modelName = $resultRow->modelName;
-		}
-		else {
-			if ($resultRow->designatedModelName > '') {
-				$modelName = $resultRow->designatedModelName.'(d)';
-			}
-		}
-		echo $modelName.'</td>';
-		echo '<td align="center">'.'<b>'.$resultRow->firstName1.' '.$resultRow->lastName1.'</b>';
-		if(($resultRow->firstName2 !="") && ($resultRow->lastName2 !=""))
-			{
-				echo ' and '.'<b>'.$resultRow->firstName1.' '.$resultRow->lastName1.'</b>';
-			}
-		echo '</td>';
-		echo '<td align="center">'.$resultRow->clientAddress.' '.$resultRow->clientCity.'</td>';
-		echo '<td align="center"> '.nullToChar($resultRow->calculatedBuildCompletionDate,'-');
-		if ($securityLevelOneCheck) {
-			echo $resultRow->calculatedBuildCompletionDateText;
-		}
-		echo '</td>';
+		echo '<td>Work Order date testing words</td>';
+		echo '<td>Trade testing words</td>';
+		echo '<td>Type testing words</td>';
+		echo '<td>Description testing words</td>';
+		echo '<td>Appointment date testing words</td>';
+		echo '<td>Days Out testing words</td>';
 		echo '</tr>';
 	}
 }

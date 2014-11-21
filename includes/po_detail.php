@@ -32,12 +32,13 @@ $(document).ready(function() {
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 <thead>
   <tr>
-	<th align="center" style="width:100px !important;">Date Reported</th>
-    <th align="center" style="width:80px !important;">Type</th>
-	<th align="center" style="width:50px !important;">Number</th>
+	<th align="center" style="width:90px !important;">Date Created</th>
+    <th align="center" style="width:80px !important;">Account</th>
+	<th align="center" style="width:80px !important;">PO #</th>
 	<th align="center" style="width:300px !important;">Description</th>
+	<th align="center" style="width:200px !important;">Note</th>
 	<th align="center" style="width:120px !important;">Trade assigned</th>
-	<th align="center" style="width:50px !important;">Completed</th>
+	<th align="center" style="width:40px !important;">Completed</th>
     <th align="center" style="width:100px !important;">Actions</th>
 </tr>
 </thead>
@@ -131,6 +132,9 @@ echo '</tbody>		';
 			<input style="min-height:24px; width:98%;" type="text" name="">
 		</td>
 		<td align="center">
+			<input style="min-height:24px; width:98%;" type="text" name="">
+		</td>
+		<td align="center">
 			<input style="min-height:24px;" type="checkbox" name="">
 		</td>
 		<td align="center" style="width:100px;">
@@ -143,7 +147,7 @@ echo '</tbody>		';
 			15 Sep 2014
 		</td>
 		<td align="center">
-			Interval
+			Painting
 		</td>
 		<td align="center">
 			5
@@ -151,6 +155,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
+		<td>Note type here</td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>
@@ -169,7 +174,7 @@ echo '</tbody>		';
 			15 Sep 2014
 		</td>
 		<td align="center">
-			Interval
+			Metals
 		</td>
 		<td align="center">
 			5
@@ -177,6 +182,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
+		<td>Note type here</td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>
@@ -195,7 +201,7 @@ echo '</tbody>		';
 			15 Sep 2014
 		</td>
 		<td align="center">
-			Interval
+			Painting
 		</td>
 		<td align="center">
 			5
@@ -203,6 +209,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
+		<td>Note type here</td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>
@@ -221,7 +228,7 @@ echo '</tbody>		';
 			15 Sep 2014
 		</td>
 		<td align="center">
-			Interval
+			Sand
 		</td>
 		<td align="center">
 			5
@@ -229,6 +236,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
+		<td></td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>
@@ -247,7 +255,7 @@ echo '</tbody>		';
 			15 Sep 2014
 		</td>
 		<td align="center">
-			Interval
+			Painting
 		</td>
 		<td align="center">
 			5
@@ -255,6 +263,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
+		<td></td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>
@@ -281,6 +290,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
+		<td>Note type here</td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>

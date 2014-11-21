@@ -82,7 +82,7 @@ if ($db2->Query($query)) {
 		echo '<td align="center">'.'<b>'.$resultRow->firstName1.' '.$resultRow->lastName1.'</b>';
 		if(($resultRow->firstName2 !="") && ($resultRow->lastName2 !=""))
 			{
-				echo ' and '.'<b>'.$resultRow->firstName1.' '.$resultRow->lastName1.'</b>';
+				echo ' and '.'<b>'.$resultRow->firstName2.' '.$resultRow->lastName2.'</b>';
 			}
 		echo '</td>';
 		echo '<td align="center">'.$resultRow->clientAddress.' '.$resultRow->clientCity.'</td>';
