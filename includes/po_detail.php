@@ -151,7 +151,7 @@ echo '</tbody>		';
 		<td></td>
 		<td></td>
 		<td align="center" style="width:100px;">
-			<a title="Add" href="index.php?myAction=PO&myPOAction=Add"><img style="width:28px;" src="./images/add_icon.png" /></a>
+			<a title="Add" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add' ?>"><img style="width:28px;" src="./images/add_icon.png" /></a>
 		</td>
 	<tr>
 	
@@ -177,35 +177,8 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="index.php?myAction=PO&myPOAction=Edit"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="#"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Metals
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="index.php?myAction=PO&myPOAction=Edit"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="#"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 	
@@ -231,35 +204,8 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="index.php?myAction=PO&myPOAction=Edit"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="#"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Sand
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td></td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="index.php?myAction=PO&myPOAction=Edit"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="#"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 	
@@ -276,7 +222,7 @@ echo '</tbody>		';
 		<td align="center">
 			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
 		</td>
-		<td></td>
+		<td>Note type here</td>
 		<td align="center">
 			Northern Plumbing Systems Inc
 		</td>
@@ -285,8 +231,8 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="#"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="#"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 	
@@ -295,7 +241,7 @@ echo '</tbody>		';
 			15 Sep 2014
 		</td>
 		<td align="center">
-			Interval
+			Painting
 		</td>
 		<td align="center">
 			5
@@ -308,12 +254,66 @@ echo '</tbody>		';
 			Northern Plumbing Systems Inc
 		</td>
 		<td align="center">
-			<input style="min-height:24px;" disabled checked type="checkbox" name="">
+			<input style="min-height:24px;" type="checkbox" name="">
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="#"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="#"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+		</td>
+	<tr>
+	
+	<tr>
+		<td align="center">
+			15 Sep 2014
+		</td>
+		<td align="center">
+			Painting
+		</td>
+		<td align="center">
+			5
+		</td>
+		<td align="center">
+			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
+		</td>
+		<td>Note type here</td>
+		<td align="center">
+			Northern Plumbing Systems Inc
+		</td>
+		<td align="center">
+			<input style="min-height:24px;" type="checkbox" name="">
+		</td>
+		<td align="center">
+			
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+		</td>
+	<tr>
+	
+	<tr>
+		<td align="center">
+			15 Sep 2014
+		</td>
+		<td align="center">
+			Painting
+		</td>
+		<td align="center">
+			5
+		</td>
+		<td align="center">
+			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
+		</td>
+		<td>Note type here</td>
+		<td align="center">
+			Northern Plumbing Systems Inc
+		</td>
+		<td align="center">
+			<input style="min-height:24px;" type="checkbox" name="">
+		</td>
+		<td align="center">
+			
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 </tbody>

@@ -1,5 +1,5 @@
 <? 
-	if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit")
+	if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit" or $_GET["myPOAction"]=="View")
 	{
 		require_once ("po_form.php");
 		exit();
