@@ -20,17 +20,20 @@
 	<li>
 		<a href="#">Completed</a>
 	</li>
+	<li>
+		<a href="#">Paid</a>
+	</li>
 </ul>
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 <thead>
   <tr>
 	<th align="center">Lot</th>
 	<th align="center" style="width:170px !important;">Site</th>
-	<th align="center">Created Date</th>
-	<th align="center" style="width:150px !important;">Trade</th>
-	<th align="center">Type</th>
+	<th align="center">PO #</th>
+	<th align="center" style="width:150px !important;">Created Date</th>
+	<th align="center">Trade Assigned</th>
 	<th align="center" style="width:300px !important;">Description</th>
-    <th align="center" >RTO Date</th>
+    <th align="center" >User</th>
 	<th align="center">Completion Date</th>
 </tr>
 </thead>
@@ -77,12 +80,12 @@ if ($db2->Query($query)) {
 		echo '</a></td>';
 		
 		echo '<td class="lotLinkCellInTable" align="center"><a href="index.php?myAction=PO&siteShortName='.$resultRow->siteShortName.'&siteName='.$resultRow->siteName.'"><b>'.$resultRow->siteName.'</b></a></td>';
-		echo '<td>Work Order date testing words</td>';
+		echo '<td>PO # testing words</td>';
+		echo '<td>Created date testing words</td>';
 		echo '<td>Trade testing words</td>';
-		echo '<td>Type testing words</td>';
-		echo '<td>Description testing words</td>';
-		echo '<td>Appointment date testing words</td>';
-		echo '<td>Days Out testing words</td>';
+		echo '<td>Description assigned testing words</td>';
+		echo '<td>User testing words</td>';
+		echo '<td>Completion date testing words</td>';
 		echo '</tr>';
 	}
 }

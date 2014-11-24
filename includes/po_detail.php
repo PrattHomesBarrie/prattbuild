@@ -27,6 +27,12 @@ $(document).ready(function() {
 	<li>
 		<a href="#">Completed</a>
 	</li>
+	<li>
+		<a href="#">Paid</a>
+	</li>
+	<li>
+		<a href="#">History</a>
+	</li>
 </ul>
 <form>
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
@@ -116,7 +122,7 @@ echo '</tbody>		';
 ?>
 <tbody>
 	<tr>
-		<td align="center">
+		<!--<td align="center">
 			<input style="min-height:24px; width:98%;" type="text" name="">
 		</td>
 		<td align="center">
@@ -136,9 +142,16 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
+		</td> -->
+		<td ></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
 		<td align="center" style="width:100px;">
-			<a title="Quick Add" href="index.php?myAction=PO&myPOAction=Add"><img style="width:28px;" src="./images/add_icon.png" /></a>
+			<a title="Add" href="index.php?myAction=PO&myPOAction=Add"><img style="width:28px;" src="./images/add_icon.png" /></a>
 		</td>
 	<tr>
 	
