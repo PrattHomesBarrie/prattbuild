@@ -21,6 +21,16 @@ require_once('includes/check_session.php');
 <script src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="includes/javascripts/prattScripts.js"></script>
+
+<script type="text/javascript" src="/js/jquery.table.addrow.js"></script>
+<script type="text/javascript">
+(function($){
+$(document).ready(function(){
+	$(".addRow").btnAddRow();
+	$(".delRow").btnDelRow();
+});
+})(jQuery);
+</script>
 </head>
 
 <body>

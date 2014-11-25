@@ -14,14 +14,17 @@
 
 <small><br>Note: Click on a column title to sort by that column</small>
 <ul class="tabs">	
-	<li class="current">
-		<a href="#">Outstanding</a>
+	<li <? if($_GET["lotStatus"]==0 or !isset($_GET["lotStatus"])) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=0<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; ?>'>Outstanding</a>
 	</li>
-	<li>
-		<a href="#">Completed</a>
+	<li <? if($_GET["lotStatus"]==1) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=1<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; ?>'>Completed</a>
 	</li>
-	<li>
-		<a href="#">Paid</a>
+	<li <? if($_GET["lotStatus"]==2) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=2<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; ?>'>Paid</a>
+	</li>
+	<li <? if($_GET["lotStatus"]==3) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=3<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; ?>'>History</a>
 	</li>
 </ul>
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">

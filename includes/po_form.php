@@ -1,4 +1,4 @@
-&nbsp;#123456
+&nbsp;#<?= $_GET["PONum"]?>
 <br><br>
 <?php
 	if($_GET["myPOAction"]=="View")
@@ -67,7 +67,7 @@
 				else if(($_GET["lotNumber"])!='') echo " ".$_GET["lotNumber"].", ";
 				
 			?>
-	Site:<? if(isset($_GET["siteName"])) echo " ".$_GET["siteName"];
+	Site:<? if(isset($siteName)) echo " ".$siteName;
 		?>
 	
 	</div>
@@ -76,22 +76,30 @@
 	</div>
 </div>
 
-<div style="width:1000px; clear:both;">
-<br>PO Status: &nbsp;
-	<select>
-		<option>
-			Outstanding
-		</option>
-		<? if($_GET["myPOAction"]=="Edit")
-		echo 
-		'<option>
-			Completed
-		</option>
-		<option>
-		Paid
-		</option>';
-		?>
-	</select>
+<div style="width:1000px; clear:both;">	
+	<div style="width:250px;float:left;">
+	<br>
+		PO Status: &nbsp;
+		<select>
+			<option>
+				Outstanding
+			</option>
+			<? if($_GET["myPOAction"]=="Edit")
+			echo 
+			'<option>
+				Completed
+			</option>
+			<option>
+			Paid
+			</option>';
+			?>
+		</select>
+	</div>
+	<? if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo
+	'<div style="float:right;">
+		<br><Button class="addRow" >+ Add Row</button>
+	</div>';
+	?>
 </div>
 <div style="width:1000px;clear:both;">
 	<table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
@@ -103,66 +111,62 @@
 			<th align="center" style="width:350px !important;">Description</th>
 			<th align="center" style="width:150px !important;">Unit Price</th>
 			<th align="center" style="width:150px !important;">Ext. Price</th>
+			<? if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<th align="center">Action</th>' ;?>
 		</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td>
+				<td align="center">
 					1
 				</td>
-				<td>
+				<td align="center">
 					Painting
 				</td>
-				<td>
-				<?
-					if($_GET["myPOAction"]=="View") echo 'Condo model 1445/ 3 Bedroom / 2 bathroom / spec unit';
-					else echo '<input type="text" style="width:99%;" value ="Condo model 1445/ 3 Bedroom / 2 bathroom / spec unit" />';
-				
-				?>
-				</td>
-				<td>
-					$0.00
-				</td>
-				<td>
-					$0.00
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					1
-				</td>
-				<td>
-					Painting
-				</td>
-				<td>
+				<td align="center">
 					<?
 					if($_GET["myPOAction"]=="View") echo 'Condo model 1445/ 3 Bedroom / 2 bathroom / spec unit Condo model 1445/ 3 Bedroom / 2 bathroom / spec unit';
-					else echo '<input type="text" style="width:99%;" value ="Condo model 1445/ 3 Bedroom / 2 bathroom / spec unit Condo model 1445/ 3 Bedroom / 2 bathroom / spec unit" />';
+					else echo '<input type="text" style="width:99%;" value ="" />';
 				
 				?>
 				</td>
-				<td>
+				<td align="center">
 					$0.00
 				</td>
-				<td>
+				<td align="center">
 					$0.00
 				</td>
+				<? if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<td align="center"><input class="del" type="button" value="Delete" /></td>'; ?>
 			</tr>
 			
 			<tr style="background-color:grey;">
 				<td colspan="3">
 				</td>
-				<td>
+				<td align="center">
 					<b>Total:</b>
 				</td>
-				<td>
+				<td align="center">
 				 <b>$0.00</b>
 				</td>
+				<? if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<td></td>' ;?>
 			</tr>
 		</tbody>
 		
 		
 	</table>
+		<script type="text/javascript">
+			$(document).ready(function(){		
+				
+				$('.del').live('click',function(){
+					$(this).parent().parent().remove();
+				});
+				
+				$('.addRow').live('click',function(){
+					//$(this).val('Delete');
+					//$(this).attr('class','del');
+					var appendTxt = '<tr><td align="center">1</td><td align="center">Painting</td><td align="center"><input type="text" style="width:99%;" value ="" /></td><td align="center">$0.00</td><td align="center">$0.00</td><td align="center"><input class="del" type="button" value="Delete" /></td></tr>';
+					$("tr:last").prev().after(appendTxt);			
+				});        
+			});
+		</script>
 </div>
 <br>

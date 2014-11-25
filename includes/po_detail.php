@@ -15,23 +15,31 @@ $(document).ready(function() {
                } );    
 */
 </SCRIPT>
-<? echo ' - Site: <b>'.$_GET["siteName"].'</b>';
+<? echo ' - Site: <b>'.$siteName.'</b>';
  if(isset($_GET["lotNumber"]))
  echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';?>
 <small><br>Note: Click on a column title to sort by that column</small>
 
 <ul class="tabs">	
-	<li class="current">
-		<a href="#">Outstanding</a>
+	<li <? if($_GET["lotStatus"]==0 or !isset($_GET["lotStatus"])) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=0<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
+		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
+		?>'>Outstanding</a>
 	</li>
-	<li>
-		<a href="#">Completed</a>
+	<li <? if($_GET["lotStatus"]==1) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=1<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
+		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
+		?>'>Completed</a>
 	</li>
-	<li>
-		<a href="#">Paid</a>
+	<li <? if($_GET["lotStatus"]==2) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=2<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
+		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
+		?>'>Paid</a>
 	</li>
-	<li>
-		<a href="#">History</a>
+	<li <? if($_GET["lotStatus"]==3) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=PO&lotStatus=3<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
+		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
+		?>'>History</a>
 	</li>
 </ul>
 <form>
@@ -151,7 +159,35 @@ echo '</tbody>		';
 		<td></td>
 		<td></td>
 		<td align="center" style="width:100px;">
-			<a title="Add" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add' ?>"><img style="width:28px;" src="./images/add_icon.png" /></a>
+			<a title="Add" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add'?>">
+			<img style="width:28px;" src="./images/add_icon.png" /></a>
+		</td>
+	<tr>
+	
+	<tr>
+		<td align="center">
+			15 Sep 2014
+		</td>
+		<td align="center">
+			Painting
+		</td>
+		<td align="center">
+			5
+		</td>
+		<td align="center">
+			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
+		</td>
+		<td>Note type here</td>
+		<td align="center">
+			Northern Plumbing Systems Inc
+		</td>
+		<td align="center">
+			<input style="min-height:24px;" type="checkbox" name="">
+		</td>
+		<td align="center">
+			<? $PONum=123456?>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 	
@@ -177,10 +213,11 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
+	
 	
 	<tr>
 		<td align="center">
@@ -204,10 +241,11 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
+	
 	
 	<tr>
 		<td align="center">
@@ -231,10 +269,11 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
+	
 	
 	<tr>
 		<td align="center">
@@ -258,10 +297,11 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
+	
 	
 	<tr>
 		<td align="center">
@@ -285,10 +325,11 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
+	
 	
 	<tr>
 		<td align="center">
@@ -312,8 +353,8 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&siteShortName='.$_GET["siteShortName"].'&siteName='.$_GET["siteName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 </tbody>

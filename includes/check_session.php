@@ -53,6 +53,20 @@ else
 {
 	$siteShortName = $_SESSION["siteShortName"];
 }
+
+if (isset($_GET['siteName'])) {
+	$siteName = $_GET['siteName'];
+	$_SESSION["siteName"] = $siteName;
+}
+elseif (isset($_POST['siteName'])) {
+	$siteName = $_POST['siteName'];
+	$_SESSION["siteName"] = $siteName;
+}
+else
+{
+	$siteName = $_SESSION["siteName"];
+}
+
 if ($siteShortName ==  'All') {
 	$siteShortName = '';
 }
