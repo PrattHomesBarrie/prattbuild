@@ -23,7 +23,7 @@ require_once('includes/check_session.php');
 <script src="includes/javascripts/prattScripts.js"></script>
 <script type="text/javascript" src="./jquery-1.7.min.js"></script>
 </head>
-
+  
 <body>
 
 <div class="container">
