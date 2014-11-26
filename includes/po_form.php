@@ -13,10 +13,16 @@
 		echo '&nbsp;<input type="button" value="Cancel" onclick="javascript:window.history.back();">';
 	}
 ?>
-<!--
-<div style="width:1000px;display:block">
+
+<div style="width:1000px;clear:both;">
+<hr>
+</div> 
+<?
+if($_GET["myPOAction"]=="View")
+echo
+'<div style="width:1000px;display:block">
 	<div style="width:300px;float:left;margin-left:150px;">
-	<h2>Pratt Hansen Grougp Inc.</h2>
+	<h3>Pratt Hansen Grougp Inc.</h3>
 	301 King Street
 	<br>Barrie, Ontario
 	<br>L4N 6B5
@@ -25,17 +31,17 @@
 	</div>
 
 	<div style="width:300px;float:left;margin-left:150px;">
-	<h2>Purchase Order</h2>
-	PO #:
+	<h3>Purchase Order</h3>
+	PO #: '.$_GET["PONum"].'
 	<br>Created date:
 	<br>Required date:
 	</div>
-</div>-->
+</div>
 <div style="width:1000px;clear:both;">
-
+<br>
 <hr>
-</div> 
-<div style="width:1000px;">
+</div> '; ?>
+<div style="width:1000px;clear:both;">
 	<div style="width:300px !important; float:left;">
 	<h3 style="padding-left: 0px;">Vendor</h3>
 	Vendor's name Vendor's name

@@ -22,8 +22,11 @@
 	    	echo '<li><span onClick=”return true”><a>PASS<img src="./images/white_arrow.png" alt="" style="float:right; width:16px;" /></a></span>';
 			echo 	'<ul>
 							<li><span onClick=”return true”><a href="index.php?myAction=AfterSS">After Sales Service</a></span></li>
-							<li><span onClick=”return true”><a href="index.php?myAction=PO">Purchase Order</a></span></li>
-							<li><span onClick=”return true”><a href="index.php?myAction=Trade">Trades</a></span></li>
+							<li><span onClick=”return true”><a href="index.php?myAction=PO">Purchase Order</a></span></li>';
+			if($securityCanDoTrade)
+			echo '
+							<li><span onClick=”return true”><a href="index.php?myAction=Trade&tradeStatus=1">Trades</a></span></li>';
+			echo '
 							<li><span onClick=”return true”><a href="index.php?myAction=Notification">Notification</a></span></li>
 						</ul>
 					</li>';
@@ -137,7 +140,7 @@ if ($db2->Query($query)) {
 		//echo '<li><a>Clearing Activity</a>';
 		//echo '</li>';
 	}
-	else if($myAction == 'AfterSS' or $myAction == 'Deficiency' or $myAction == 'Trade' or $myAction == 'Notification' or $myAction == 'PO')
+	else if($myAction == 'AfterSS' or $myAction == 'Deficiency' or $myAction == 'Notification' or $myAction == 'PO')
 	{
 		if($myAction != 'PO')
 		{
@@ -147,8 +150,6 @@ if ($db2->Query($query)) {
 				</ul>';
 		echo '</li>';
 		}
-		echo '<li><span onClick=”return true”><a href="index.php?myAction=Trade">Trades</a></span>';
-		echo '</li>';
 		echo '<li><span onClick=”return true”><a href="index.php?myAction=Notification">Notification</a></span>';
 		echo '</li>';
 		echo '</ul></li>';

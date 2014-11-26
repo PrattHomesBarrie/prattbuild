@@ -1,10 +1,17 @@
-<?php
-echo '<br><br><div>You are viewing: '.$myAction . '</div>';
-require_once ("classes/misc_functions.php");
-
-echo '<img style="width:500px;margin-left:20%" src="./images/underconstruction.jpg" alt="this page is in under construction" >'
-
-
+<? 
+	if($_GET["myTradeAction"]=="Edit")
+	{
+		require_once ("trade_form.php");
+	}
+	else
+	{
+		if(!isset($_GET["tradeID"]) or $_GET["tradeID"]=='')
+		{
+			require_once ("trade_list.php");
+		}
+		else
+		{
+			require_once ("trade_detail.php");
+		}
+	}
 ?>
-
-  
