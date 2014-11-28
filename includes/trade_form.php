@@ -47,7 +47,7 @@ $db2->Query($query);
 	?>
 	<tr>
 		<input type="hidden" id="id" name="id" value="<? echo $row->id;  ?>" />
-		<td><input type="text" name="name" value="<? echo $row->name;  ?>" style="height:22px;width:99%;"/></td>
+		<td><input type="hidden" name="name" value="<? echo $row->name;  ?>" style="height:22px;width:99%;"/><? echo $row->name;  ?></td>
 		<td><input type="text" name="address" value="<? echo $row->address;  ?>" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="phone" value="<? echo $row->phone;  ?>" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="fax" value="<? echo $row->fax;  ?>" style="height:22px;width:99%;"/></td>

@@ -8,3 +8,10 @@ CREATE TABLE  `tradeList` (
  `status` INT( 2 ) NOT NULL
 ) ENGINE = MYISAM ;
 
+CREATE TABLE  `tradeHistory` (
+ `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+ `user` VARCHAR( 20 ) NOT NULL ,
+ `action` VARCHAR( 20 ) NOT NULL ,
+ `date` DATETIME NOT NULL
+) ENGINE = MYISAM ;
+ALTER TABLE  `tradeHistory` ADD  `tradename` VARCHAR( 100 ) NOT NULL AFTER  `action` ;

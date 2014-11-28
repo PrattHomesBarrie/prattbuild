@@ -21,13 +21,13 @@
 		if ($securityLevelOneCheck) {
 	    	echo '<li><span onClick=”return true”><a>PASS<img src="./images/white_arrow.png" alt="" style="float:right; width:16px;" /></a></span>';
 			echo 	'<ul>
-							<li><span onClick=”return true”><a href="index.php?myAction=AfterSS">After Sales Service</a></span></li>
-							<li><span onClick=”return true”><a href="index.php?myAction=PO">Purchase Order</a></span></li>';
+							<li><a href="index.php?myAction=AfterSS">After Sales Service</a></li>
+							<li><a href="index.php?myAction=PO">Purchase Order</a></li>';
 			if($securityCanDoTrade)
 			echo '
-							<li><span onClick=”return true”><a href="index.php?myAction=Trade&tradeStatus=1">Trades</a></span></li>';
+							<li><a href="index.php?myAction=Trade&tradeStatus=1">Trades</a></li>';
 			echo '
-							<li><span onClick=”return true”><a href="index.php?myAction=Notification">Notification</a></span></li>
+							<li><a href="index.php?myAction=Notification">Notification</a></li>
 						</ul>
 					</li>';
 		}

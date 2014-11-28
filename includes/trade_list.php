@@ -1,6 +1,5 @@
 
-<SCRIPT LANGUAGE='Javascript'>    
-/*
+<SCRIPT LANGUAGE='Javascript'>   /* 
 $(document).ready(function() {
                   oTable = $("#lotListTable").dataTable({
 									"bJQueryUI": true,
@@ -12,42 +11,52 @@ $(document).ready(function() {
                                     "bInfo": true,
     								 "bProcessing": false
                          });
-               } );    
-*/
+               } );  */  
+
 </SCRIPT>
 <?
-if($_GET["myTradeAction"]=="Add")
+	$date=date("Y-m-d h:i:sa");
+	if($_GET["myTradeAction"]=="Add")
 	{
-	$query='INSERT INTO tradeList VALUES(NULL,"'.$_POST["name"].'","'.$_POST["address"].'","'.$_POST["phone"].'","'.$_POST["fax"].'","'.$_POST["email"].'",'.$_POST["status"].')';
-	$db->Query($query);
-	/*
-	$table = "tradeList";
-	$arr["name"] = MySQL::SQLValue($_POST["name"]);	
-	$arr["address"] = MySQL::SQLValue($_POST["address"]);	
-	$arr["phone"] = MySQL::SQLValue($_POST["phone"]);	
-	$arr["fax"] = MySQL::SQLValue($_POST["fax"]);	
-	$arr["email"] = MySQL::SQLValue($_POST["email"]);
-	$arr["status"] = MySQL::SQLValue($_POST["status"]);
-	
-	$result = $dbSingleUse->InsertRow($table, $arr);
-	//echo $result."result";*/
+		if($_POST["name"]=='')
+		{
+		$PHPcheckTradeName ="Trade's name can not be blank!!!";
+		}
+		else if($_POST["name"]!='')
+		{
+		$query='INSERT INTO tradeList VALUES(NULL,"'.$_POST["name"].'","'.$_POST["address"].'","'.$_POST["phone"].'","'.$_POST["fax"].'","'.$_POST["email"].'",'.$_POST["status"].')';
+		$db->Query($query);
+		$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","'.$_GET["myTradeAction"].'","'.$_POST["name"].'","'.$date.'")';
+		$db->Query($query2);
+		//echo $query;
+		//echo '<br>'.$query2;
+		}
 	}
 	if($_GET["myTradeAction"]=="Save")
 	{
 	$query='UPDATE tradeList SET name="'.$_POST["name"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];
 	$query.=' where id='.$_POST["id"].' limit 1';
 	$db->Query($query);
+	$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","Edit","'.$_POST["name"].'","'.$date.'")';
+	$db->Query($query2);
+	//echo $query;
+	//echo '<br>'.$query2;
 	}
-	if($_GET["myTradeAction"]=="Delete")
+	if($_GET["myTradeAction"]=="Delete" && isset($_GET["tradeID"]))
 	{
-		{
-			if(isset($_GET["tradeID"]))
-			$query='delete from tradeList where id='.$_GET["tradeID"].' limit 1';
-			$db->Query($query);
-		}
+		$query='delete from tradeList where id='.$_GET["tradeID"].' limit 1';
+		$db->Query($query);
+		$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","'.$_GET["myTradeAction"].'","'.$_GET["tradeName"].'","'.$date.'")';
+		$db->Query($query2);
+		//echo $query;
+		//echo '<br>'.$query2;
 		header('Location: index.php?myAction=Trade');
 	}
 	?>
+	<script>
+		var checkTradeName = <?php if($PHPcheckTradeName!='') echo json_encode($PHPcheckTradeName); ?>;
+		alert(checkTradeName);
+	</script>
 <small><br>Note: Click on a column title to sort by that column</small>
 
 <ul class="tabs">
@@ -56,6 +65,9 @@ if($_GET["myTradeAction"]=="Add")
 	</li>
 	<li <? if($_GET["tradeStatus"]==0 && isset($_GET["tradeStatus"])) echo 'class="current"'; ?>>
 		<a href='index.php?myAction=Trade&tradeStatus=0'>Deactive</a>
+	</li>
+	<li <? if($_GET["tradeStatus"]==3 && isset($_GET["tradeStatus"])) echo 'class="current"'; ?>>
+		<a href='index.php?myAction=Trade&tradeStatus=3'>History</a>
 	</li>
 </ul>
 
@@ -77,11 +89,11 @@ if($_GET["myTradeAction"]=="Add")
 require_once ("classes/misc_functions.php");
 
 $query = 'select * from tradeList';
-if(isset($_GET["tradeStatus"]))
+if(isset($_GET["tradeStatus"])&& $_GET["tradeStatus"]!=3)
 {
 $query = $query." where status = ".$_GET["tradeStatus"];
 }
-else 
+else
 {
 $query = $query." where status = 1";
 }
@@ -106,7 +118,7 @@ $query = $query." where status = 1";
 		<td align="center" style="width:100px;">
 			<input type="image" src="./images/add_icon.png" width="28" title="Add" />
 		</td>
-	<tr>
+	</tr>
 	<? 
 	if ($db2->Query($query)) { 
 	while ($resultRow = $db2->Row() ) {?>
@@ -132,9 +144,9 @@ $query = $query." where status = 1";
 		</td>
 		<td align="center">
 			<a title="Edit" href="<? echo 'index.php?myAction=Trade&tradeStatus='.$_GET["tradeStatus"].'&myTradeAction=Edit&tradeID='.$resultRow->id ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="Delete" href="<? echo 'index.php?myAction=Trade&tradeStatus='.$_GET["tradeStatus"].'&myTradeAction=Delete&tradeID='.$resultRow->id ?>"onClick= "return confirm('Do you want to delete');"><img style="width:30px;" src="./images/delete_icon.png" /></a>
+			<a title="Delete" href="<? echo 'index.php?myAction=Trade&tradeStatus='.$_GET["tradeStatus"].'&myTradeAction=Delete&tradeID='.$resultRow->id.'&tradeName='.$resultRow->name ?>"onClick= "return confirm('Do you want to delete');"><img style="width:30px;" src="./images/delete_icon.png" /></a>
 		</td>
-	<tr>
+	</tr>
 	
 	<?}}?>
 	
