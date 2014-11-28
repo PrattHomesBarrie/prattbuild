@@ -40,7 +40,7 @@ $(document).ready(function() {
 </thead>
 <?php
 require_once ("classes/misc_functions.php");
-$query = 'select * from tradeHistory order by date DESC';
+$query = 'select * from tradeHistory order by id DESC';
 ?>
 <tbody>
 	<? 

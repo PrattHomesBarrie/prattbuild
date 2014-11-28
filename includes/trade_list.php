@@ -1,5 +1,5 @@
 
-<SCRIPT LANGUAGE='Javascript'>   /* 
+<SCRIPT LANGUAGE='Javascript'> 
 $(document).ready(function() {
                   oTable = $("#lotListTable").dataTable({
 									"bJQueryUI": true,
@@ -11,12 +11,12 @@ $(document).ready(function() {
                                     "bInfo": true,
     								 "bProcessing": false
                          });
-               } );  */  
+               } ); 
 
 </SCRIPT>
 <?
 	$date=date("Y-m-d h:i:sa");
-	if($_GET["myTradeAction"]=="Add")
+	if($_GET["myTradeAction"]=="Save"  && !isset($_POST["id"]))
 	{
 		if($_POST["name"]=='')
 		{
@@ -32,7 +32,7 @@ $(document).ready(function() {
 		//echo '<br>'.$query2;
 		}
 	}
-	if($_GET["myTradeAction"]=="Save")
+	if($_GET["myTradeAction"]=="Save" && isset($_POST["id"]))
 	{
 	$query='UPDATE tradeList SET name="'.$_POST["name"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];
 	$query.=' where id='.$_POST["id"].' limit 1';
@@ -53,10 +53,12 @@ $(document).ready(function() {
 		header('Location: index.php?myAction=Trade');
 	}
 	?>
+	<? if($PHPcheckTradeName!=''){ ?>
 	<script>
-		var checkTradeName = <?php if($PHPcheckTradeName!='') echo json_encode($PHPcheckTradeName); ?>;
+		var checkTradeName = <?php echo json_encode($PHPcheckTradeName) ?>;
 		alert(checkTradeName);
 	</script>
+	<? } ?>
 <small><br>Note: Click on a column title to sort by that column</small>
 
 <ul class="tabs">
@@ -100,23 +102,14 @@ $query = $query." where status = 1";
 ?>
 <tbody>
 	<tr>
-		<td><input type="text" id="name" name="name" style="height:22px; width:99%;" /></td>
-		<td><input type="text" id="address" name="address" style="height:22px;width:99%;" /></td>
-		<td><input type="text" id="phone" name="phone" style="height:22px;width:99%;" /></td>
-		<td><input type="text" id="fax" name="fax" style="height:22px;width:99%;" /></td>
-		<td><input type="text" id="email" name="email" style="height:22px;width:99%;" /></td>
-		<td align="center">
-			<select name="status" style="height:28px;">
-				<option <? if($_GET["tradeStatus"]==1 or !isset($_GET["tradeStatus"])) echo 'selected';?> value="1">
-					Active
-				</option>
-				<option <? if($_GET["tradeStatus"]==0 && isset($_GET["tradeStatus"])) echo 'selected';?> value="0">
-					Deactive
-				</option>
-			</select>
-		</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
 		<td align="center" style="width:100px;">
-			<input type="image" src="./images/add_icon.png" width="28" title="Add" />
+			<a href="index.php?myAction=Trade&myTradeAction=Add"><img  src="./images/add_icon.png" /></a>
 		</td>
 	</tr>
 	<? 
