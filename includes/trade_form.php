@@ -4,7 +4,9 @@
 <thead>
   <tr>
 	<th align="center" style="width:200px !important;">Name</th>
-    <th align="center" style="width:300px !important;">Address</th>
+	<th align="center" style="width:100px !important;">Username</th>
+	<th align="center" style="width:100px !important;">Password</th>
+    <th align="center" style="width:250px !important;">Address</th>
 	<th align="center" style="width:100px !important;">Phone</th>
 	<th align="center" style="width:100px !important;">Fax</th>
 	<th align="center" style="width:150px !important;">Email</th>
@@ -27,6 +29,8 @@ $db2->Query($query);
 		echo 
 		'<tr>
 		<td><input type="text" name="name" style="height:22px;width:99%;"/></td>
+		<td><input type="text" name="username" style="height:22px;width:99%;"/></td>
+		<td><input type="text" name="password" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="address" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="phone"  style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="fax"  style="height:22px;width:99%;"/></td>
@@ -59,6 +63,8 @@ $db2->Query($query);
 	<tr>
 		<input type="hidden" id="id" name="id" value="<? echo $row->id;  ?>" />
 		<td align="center"><input type="hidden" name="name" value="<? echo $row->name;  ?>" style="height:22px;width:99%;"/><? echo $row->name;  ?></td>
+		<td align="center"><input type="hidden" name="username" value="<? echo $row->username;  ?>" style="height:22px;width:99%;"/><? echo $row->username;  ?></td>
+		<td align="center"><input type="text" name="password" value="<? echo $row->password;  ?>" style="height:22px;width:99%;"/></td>
 		<td align="center"><input type="text" name="address" value="<? echo $row->address;  ?>" style="height:22px;width:99%;"/></td>
 		<td align="center"><input type="text" name="phone" value="<? echo $row->phone;  ?>" style="height:22px;width:99%;"/></td>
 		<td align="center"><input type="text" name="fax" value="<? echo $row->fax;  ?>" style="height:22px;width:99%;"/></td>

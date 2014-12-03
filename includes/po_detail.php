@@ -159,7 +159,7 @@ echo '</tbody>		';
 		<td></td>
 		<td></td>
 		<td align="center" style="width:100px;">
-			<a title="Add" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add'?>">
+			<a title="Add" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add'?>">
 			<img style="width:28px;" src="./images/add_icon.png" /></a>
 		</td>
 	<tr>
@@ -186,8 +186,8 @@ echo '</tbody>		';
 		</td>
 		<td align="center">
 			<? $PONum=123456?>
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	<tr>
 	

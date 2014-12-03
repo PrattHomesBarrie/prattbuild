@@ -24,7 +24,7 @@ $(document).ready(function() {
 		}
 		else if($_POST["name"]!='')
 		{
-		$query='INSERT INTO tradeList VALUES(NULL,"'.$_POST["name"].'","'.$_POST["address"].'","'.$_POST["phone"].'","'.$_POST["fax"].'","'.$_POST["email"].'",'.$_POST["status"].')';
+		$query='INSERT INTO tradeList VALUES(NULL,"'.$_POST["name"].'","'.$_POST["username"].'","'.$_POST["password"].'","'.$_POST["address"].'","'.$_POST["phone"].'","'.$_POST["fax"].'","'.$_POST["email"].'",'.$_POST["status"].')';
 		$db->Query($query);
 		$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","'.$_GET["myTradeAction"].'","'.$_POST["name"].'","'.$date.'")';
 		$db->Query($query2);
@@ -34,7 +34,7 @@ $(document).ready(function() {
 	}
 	if($_GET["myTradeAction"]=="Save" && isset($_POST["id"]))
 	{
-	$query='UPDATE tradeList SET name="'.$_POST["name"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];
+	$query='UPDATE tradeList SET name="'.$_POST["name"].'",username="'.$_POST["username"].'",password="'.$_POST["password"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];
 	$query.=' where id='.$_POST["id"].' limit 1';
 	$db->Query($query);
 	$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","Edit","'.$_POST["name"].'","'.$date.'")';
@@ -91,7 +91,7 @@ $(document).ready(function() {
 require_once ("classes/misc_functions.php");
 
 $query = 'select * from tradeList';
-if(isset($_GET["tradeStatus"])&& $_GET["tradeStatus"]!=3)
+if(isset($_GET["tradeStatus"]))
 {
 $query = $query." where status = ".$_GET["tradeStatus"];
 }
@@ -99,6 +99,7 @@ else
 {
 $query = $query." where status = 1";
 }
+$query.= " order by name ASC";
 ?>
 <tbody>
 	<tr>
@@ -109,7 +110,7 @@ $query = $query." where status = 1";
 		<td></td>
 		<td></td>
 		<td align="center" style="width:100px;">
-			<a href="index.php?myAction=Trade&myTradeAction=Add"><img  src="./images/add_icon.png" /></a>
+			<a title="Add" href="index.php?myAction=Trade&myTradeAction=Add"><img  src="./images/add_icon.png" /></a>
 		</td>
 	</tr>
 	<? 
