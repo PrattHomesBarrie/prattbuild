@@ -1,6 +1,5 @@
 
-<SCRIPT LANGUAGE='Javascript'>    
-/*
+<SCRIPT LANGUAGE='Javascript'>
 $(document).ready(function() {
                   oTable = $("#lotListTable").dataTable({
 									"bJQueryUI": true,
@@ -13,30 +12,47 @@ $(document).ready(function() {
     								 "bProcessing": false
                          });
                } );    
-*/
+
 </SCRIPT>
+
+<?
+$date=date("Y-m-d h:i:sa");
+if($_GET["myPOAction"]=="Save"  && $_POST["id"]=="")
+	{
+		$query='INSERT INTO poList VALUES(NULL,"'.$date.'","'.$_GET["siteShortName"].'",'.$_GET["lotNumber"].','.$_POST["lineNumber"].','.$_POST["vendorID"].',"'.$_POST["shiptoAdd"].'",';
+		if($_POST["buildingNumber"]) $query.=$_POST["buildingNumber"].',';
+		else $query.= 'NULL,';
+		$query.='"'.$_POST["poStatus"].'",'.$_POST["quantity_1"].',"'.$_POST["accountType_1"].'","'.$_POST["description_1"].'",'.$_POST["unitPrice_1"].','.$_POST["extPrice_1"].')';
+		//$db->Query($query);
+		//$query2='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","'.$_GET["myTradeAction"].'","'.$_POST["name"].'","'.$date.'")';
+		//$db->Query($query2);
+		echo $query;
+		//echo '<br>'.$query2;
+		
+	}
+	?>
 <? echo ' - Site: <b>'.$siteName.'</b>';
  if(isset($_GET["lotNumber"]))
  echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';?>
 <small><br>Note: Click on a column title to sort by that column</small>
 
 <ul class="tabs">	
-	<li <? if($_GET["lotStatus"]==0 or !isset($_GET["lotStatus"])) echo 'class="current"'; ?>>
+	<li <? if($_GET["poStatus"]==0 or !isset($_GET["poStatus"])) echo 'class="current"'; ?>>
 		<a href='index.php?myAction=PO&lotStatus=0<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
 		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
 		?>'>Outstanding</a>
 	</li>
-	<li <? if($_GET["lotStatus"]==1) echo 'class="current"'; ?>>
+	<li <? if($_GET["poStatus"]==1) echo 'class="current"'; ?>>
 		<a href='index.php?myAction=PO&lotStatus=1<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
 		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
 		?>'>Completed</a>
 	</li>
-	<li <? if($_GET["lotStatus"]==2) echo 'class="current"'; ?>>
+	<li <? if($_GET["poStatus"]==2) echo 'class="current"'; ?>>
 		<a href='index.php?myAction=PO&lotStatus=2<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
 		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
 		?>'>Paid</a>
 	</li>
-	<li <? if($_GET["lotStatus"]==3) echo 'class="current"'; ?>>
+	<li <? if($_GET["poStatus"]==3) echo 'class="current"'; ?>>
 		<a href='index.php?myAction=PO&lotStatus=3<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
 		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
 		?>'>History</a>
@@ -46,11 +62,10 @@ $(document).ready(function() {
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 <thead>
   <tr>
+	<th align="center" style="width:80px !important;">PO #</th>
 	<th align="center" style="width:90px !important;">Date Created</th>
     <th align="center" style="width:80px !important;">Account</th>
-	<th align="center" style="width:80px !important;">PO #</th>
 	<th align="center" style="width:300px !important;">Description</th>
-	<th align="center" style="width:200px !important;">Note</th>
 	<th align="center" style="width:120px !important;">Trade assigned</th>
 	<th align="center" style="width:40px !important;">Completed</th>
     <th align="center" style="width:100px !important;">Actions</th>
@@ -59,99 +74,28 @@ $(document).ready(function() {
 <?php
 
 require_once ("classes/misc_functions.php");
-/*
-if ($debug == "Yes") {
-	echo 'Watch='.$watch;
-	echo 'updatelotNumber='.$updatelotNumber;
+
+$query = 'select * from poList';
+if(isset($_GET["poStatus"]))
+{
+$query = $query." where poStatus = ".$_GET["poStatus"];
 }
-
- if (strlen($siteShortName) > 10) {
-	 echo "<br><b>Error:something wrong with length of siteShortName";
-	 exit;
- }
- 
-//$filterOfferStatusGroup;
-if ( $securityLevelOneCheck != true ) {
-	   $query = 'select * from offerDetailViewSignedOnly';
+else
+{
+$query = $query." where poStatus = 1";
 }
-else {
-		$query = 'select * from offerDetailView';
-	}
-	$query = $query.'  where 1=1 ';
-
-
-$query = $query." order by ".$lotSortList;
-
-if ($lotSortList > '') {
-	$query = $query.",";
+if(isset($_GET["siteShortName"]))
+{
+	$query = $query. ' and siteShortName="'.$_GET["siteShortName"].'"';
 }
-
-$query = $query."siteShortName, lotNumber ";
-//echo '<br>'.$query;
-echo '<tbody>';
-$prevTimelineMasterID = 0;
-if ($db2->Query($query)) { 
-	while ($resultRow = $db2->Row() ) {
-		echo '<tr>';
-		echo '<td class="lotLinkCellInTable" ><a href="index.php?myAction=PO&lotNumber='.$resultRow->lotNumber.'&siteShortName='.$resultRow->siteShortName.'">';
-		echo '<small>'.$resultRow->siteShortName.'</small>-';
-		echo '<strong>'.str_pad($resultRow->lotNumber,4,'0',STR_PAD_LEFT).'</strong>';
-		echo '</a></td>';
-		
-		echo '<td align="center">' ;
-		$modelName =  '-';
-		if ($resultRow->modelName > '') {
-			$modelName = $resultRow->modelName;
-		}
-		else {
-			if ($resultRow->designatedModelName > '') {
-				$modelName = $resultRow->designatedModelName.'(d)';
-			}
-		}
-		echo $modelName.'</td>';
-		echo '<td align="center">'.$resultRow->siteName.'</td>';
-		echo '<td align="center">'.'<b>'.$resultRow->firstName1.' '.$resultRow->lastName1.'</b>';
-		if(($resultRow->firstName2 !="") && ($resultRow->lastName2 !=""))
-			{
-				echo ' and '.'<b>'.$resultRow->firstName1.' '.$resultRow->lastName1.'</b>';
-			}
-		echo '</td>';
-		echo '<td align="center">'.$resultRow->clientAddress.' '.$resultRow->clientCity.'</td>';
-		echo '<td align="center"> '.nullToChar($resultRow->calculatedBuildCompletionDate,'-');
-		if ($securityLevelOneCheck) {
-			echo $resultRow->calculatedBuildCompletionDateText;
-		}
-		echo '</td>';
-		echo '</tr>';
-	}
+if(isset($_GET["lotNumber"]))
+{
+	$query = $query. " and lotNumber=".$_GET["lotNumber"];
 }
-echo '</tbody>		';
-*/
+$query.= " order by id DESC";
 ?>
 <tbody>
 	<tr>
-		<!--<td align="center">
-			<input style="min-height:24px; width:98%;" type="text" name="">
-		</td>
-		<td align="center">
-			<input style="min-height:24px; width:98%;" type="text" name="">
-		</td>
-		<td align="center">
-			<input style="min-height:24px; width:98%;" type="text" name="">
-		</td>
-		<td align="center">
-			<input style="min-height:24px; width:99%;" type="text" name="">
-		</td>
-		<td align="center">
-			<input style="min-height:24px; width:98%;" type="text" name="">
-		</td>
-		<td align="center">
-			<input style="min-height:24px; width:98%;" type="text" name="">
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td> -->
-		<td ></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -159,204 +103,39 @@ echo '</tbody>		';
 		<td></td>
 		<td></td>
 		<td align="center" style="width:100px;">
-			<a title="Add" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add'?>">
+			<a title="Add" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["poStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Add'?>">
 			<img style="width:28px;" src="./images/add_icon.png" /></a>
 		</td>
-	<tr>
+	</tr>
 	
+	<? 
+	if ($db2->Query($query)) { 
+	while ($resultRow = $db2->Row() ) {?>
 	<tr>
 		<td align="center">
-			15 Sep 2014
+			<?= $resultRow->id ?>
 		</td>
 		<td align="center">
-			Painting
+			<?= $resultRow->dateCreated ?>
 		</td>
 		<td align="center">
-			5
+			<?= $resultRow->accountType ?>
 		</td>
 		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
+			<?= $resultRow->description ?>
 		</td>
-		<td>Note type here</td>
 		<td align="center">
-			Northern Plumbing Systems Inc
+			<?= $resultRow->vendorID ?>
 		</td>
 		<td align="center">
 			<input style="min-height:24px;" type="checkbox" name="">
 		</td>
 		<td align="center">
-			<? $PONum=123456?>
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$PONum.'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
+			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["poStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$resultRow->id.'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["poStatus"].'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$resultRow->id.'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
-	<tr>
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Painting
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Painting
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Painting
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Painting
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Painting
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
-	
-	
-	<tr>
-		<td align="center">
-			15 Sep 2014
-		</td>
-		<td align="center">
-			Painting
-		</td>
-		<td align="center">
-			5
-		</td>
-		<td align="center">
-			Kitchen - Plumbing - faucet is loose at base and homeowner has undermount sink ** PO . 20916
-		</td>
-		<td>Note type here</td>
-		<td align="center">
-			Northern Plumbing Systems Inc
-		</td>
-		<td align="center">
-			<input style="min-height:24px;" type="checkbox" name="">
-		</td>
-		<td align="center">
-			
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
-			<a title="View" href="<? echo 'index.php?myAction=PO&lotStatus='.$_GET["lotStatus"].'&lotNumber='.$_GET["lotNumber"].'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
-		</td>
-	<tr>
+	</tr>
+	<?}}?>
 </tbody>
 </table>
 </form>

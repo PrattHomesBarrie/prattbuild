@@ -15,3 +15,17 @@ CREATE TABLE  `tradeHistory` (
  `date` DATETIME NOT NULL
 ) ENGINE = MYISAM ;
 ALTER TABLE  `tradeHistory` ADD  `tradename` VARCHAR( 100 ) NOT NULL AFTER  `action` ;
+
+CREATE TABLE  `poList` (
+ `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+ `po_number` INT( 11 ) NOT NULL ,
+ `vendorID` INT( 11 ) NOT NULL ,
+ `shiptoAdd` VARCHAR( 100 ) NOT NULL ,
+ `poStatus` VARCHAR( 20 ) NOT NULL ,
+ `quantity` INT( 11 ) NOT NULL ,
+ `account` VARCHAR( 100 ) NOT NULL ,
+ `description` VARCHAR( 500 ) NOT NULL ,
+ `unitPrice` INT( 11 ) NOT NULL ,
+ `extPrice` INT( 11 ) NOT NULL
+)
+alter table poList auto_increment = 10001;
