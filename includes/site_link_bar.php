@@ -157,14 +157,14 @@ if ($db2->Query($query)) {
 		if(isset($myAction))
 		  {
 			if($myAction =="AfterSS") echo '<br> You are viewing: After Sales Service'; 		
-			else echo '<br> You are viewing: '.$myAction; 
+			else echo '<br> You are viewing: <b><a href=index.php?myAction='.$myAction.'>'.$myAction.'</a></b>'; 
 		}
 		
 	}
 	else{
 	echo  '</ul>';
 	echo  '</div>';
-	echo '<br>You are viewing: '.$myAction;
+	echo '<br>You are viewing: <b><a href=index.php?myAction='.$myAction.'>'.$myAction.'</a></b>'; 
 	}
   }
 	

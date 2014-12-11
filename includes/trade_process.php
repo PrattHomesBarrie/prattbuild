@@ -1,6 +1,7 @@
 
 <?
 	$date=date("Y-m-d h:i:sa");
+	//If ID is invalid -> Add a Trade
 	if($_GET["myTradeAction"]=="Save"  && !isset($_POST["id"]))
 	{
 		if($_POST["name"]=='')
@@ -17,6 +18,7 @@
 		//echo '<br>'.$query2;
 		}
 	}
+	//If ID is valid -> Edit a Trade
 	if($_GET["myTradeAction"]=="Save" && isset($_POST["id"]))
 	{
 	$query='UPDATE tradeList SET name="'.$_POST["name"].'",username="'.$_POST["username"].'",password="'.$_POST["password"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];

@@ -29,3 +29,12 @@ CREATE TABLE  `poList` (
  `extPrice` INT( 11 ) NOT NULL
 )
 alter table poList auto_increment = 10001;
+
+CREATE TABLE  `poHistory` (
+ `id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
+ `user` VARCHAR( 20 ) NOT NULL ,
+ `action` VARCHAR( 20 ) NOT NULL ,
+ `poNumber` INT( 11 ) NOT NULL ,
+ `date` DATETIME NOT NULL ,
+PRIMARY KEY (  `id` )
+)

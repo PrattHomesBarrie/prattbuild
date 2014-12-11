@@ -1,4 +1,3 @@
-
 <?
 $date=date("Y-m-d h:i:sa");
 if($_GET["myPOAction"]=="Save")
@@ -28,7 +27,18 @@ if($_GET["myPOAction"]=="Save")
 			else{
 				$poLotNumber = $_GET["lotNumber"];
 			}
-		if($_POST["id"]=="")	
+		//verify site's name and lot# and building #
+		$PHPcheckSiteName =="";	
+		if($poSiteShortName=='')
+		{
+			$PHPcheckSiteName.="Site's name can not be blank!!! ";
+		}
+		if($_POST["buildingNumber"]=="" && $poLotNumber == 0)
+		{
+			$PHPcheckSiteName.="Lot # or Building # can not be blank!!!";
+		}
+		//If ID is invalid -> Add a PO
+		if($_POST["id"]=="" && $PHPcheckSiteName=="")
 		{
 		$query='INSERT INTO poList VALUES(NULL,"'.$date.'","'.$poSiteShortName.'",'.$poLotNumber.','.$_POST["vendorID"].',"'.$_POST["shiptoAdd"].'",';
 		if($_POST["buildingNumber"]) $query.=$_POST["buildingNumber"].',';
@@ -52,12 +62,16 @@ if($_GET["myPOAction"]=="Save")
 		$db->Query($query1);
 		//echo $query1;
 		}
-		//$query2='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","'.$_GET["myTradeAction"].'","'.$_POST["name"].'","'.$date.'")';
-		//$db->Query($query2);
+		if($lastPOID!=0)
+		{
+		$query2='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","Add","'.$lastPOID.'","'.$date.'")';
+		$db->Query($query2);
 		//echo $query;
 		//echo '<br>'.$query2;
+		}
 		
 		}
+		// If ID is valid ->Edit a PO
 		if($_POST["id"]!="")
 		{
 		$query='UPDATE poList SET siteShortName="'.$poSiteShortName.'",lotNumber="'.$poLotNumber.'",vendorID="'.$_POST["vendorID"].'", shiptoAdd="'.$_POST["shiptoAdd"].'",';
@@ -66,8 +80,6 @@ if($_GET["myPOAction"]=="Save")
 		$query.='poStatus='.$_POST["poStatus"];
 		$query.=' where id='.$_POST["id"].' limit 1';
 		$db->Query($query);
-		//$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","Edit","'.$_POST["name"].'","'.$date.'")';
-		//$db->Query($query2);
 		//echo $query;
 		$lineNumber = $_POST["lineNumber"];
 		//echo '<br>'.$query2;
@@ -84,7 +96,18 @@ if($_GET["myPOAction"]=="Save")
 		$db->Query($query1);
 		//echo '<br>'.$query1;
 		}
+		$query2='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","Edit","'.$_POST["id"].'","'.$date.'")';
+		$db->Query($query2);
 		}
 	}
-	
 	?>
+	
+	<? 
+	//if site's name or lot# and building # are blank -> print out error
+	if($PHPcheckSiteName!=''){ ?>
+	<script>
+		var PHPcheckSiteName = <?php echo json_encode($PHPcheckSiteName) ?>;
+		alert(PHPcheckSiteName);
+		javascript:window.history.back();
+	</script>
+	<? } ?>

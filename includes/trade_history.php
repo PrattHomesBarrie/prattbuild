@@ -9,7 +9,8 @@ $(document).ready(function() {
                                     "bFilter": true,
                                     "bSort": true,
                                     "bInfo": true,
-    								 "bProcessing": false
+    								 "bProcessing": false,
+									 "aaSorting": []
                          });
                } );    
 
@@ -32,21 +33,24 @@ $(document).ready(function() {
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 <thead>
   <tr>
+	<th align="center" style="width:150px !important;">Last Update</th>
 	<th align="center" style="width:100px !important;">User</th>
     <th align="center" style="width:100px !important;">Action</th>
 	<th align="center" style="width:300px !important;">Trade's Name</th>
-	<th align="center" style="width:150px !important;">Last Update</th>
 </tr>
 </thead>
 <?php
 require_once ("classes/misc_functions.php");
-$query = 'select * from tradeHistory order by id,tradename';
+$query = 'select * from tradeHistory order by date DESC';
 ?>
 <tbody>
 	<? 
 	if ($db2->Query($query)) { 
 	while ($resultRow = $db2->Row() ) {?>
 	<tr>
+		<td align="center">
+			<?= $resultRow->date ?>
+		</td>
 		<td align="center">
 			<?= $resultRow->user ?>
 		</td>
@@ -55,9 +59,6 @@ $query = 'select * from tradeHistory order by id,tradename';
 		</td>
 		<td align="center">
 			<?= $resultRow->tradename ?>
-		</td>
-		<td align="center">
-			<?= $resultRow->date ?>
 		</td>
 	</tr>
 	

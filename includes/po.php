@@ -1,4 +1,10 @@
 <? 
+	
+	if($_GET["poStatus"]==3)
+	{
+		require_once ("po_history.php");
+		exit();
+	}
 	if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit" or $_GET["myPOAction"]=="View")
 	{
 		require_once ("po_form.php");

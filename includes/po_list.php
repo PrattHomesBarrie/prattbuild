@@ -1,6 +1,4 @@
-
 <SCRIPT LANGUAGE='Javascript'>    
-
 $(document).ready(function() {
                   oTable = $("#lotListTable").dataTable({
 									"bJQueryUI": true,
@@ -10,7 +8,8 @@ $(document).ready(function() {
                                     "bFilter": true,
                                     "bSort": true,
                                     "bInfo": true,
-    								 "bProcessing": false
+    								 "bProcessing": false,
+									 "aaSorting": []
                          });
                } );    
 
@@ -20,15 +19,17 @@ $(document).ready(function() {
 	require_once ("po_process.php");
 ?>
 <? 
-if(isset($_GET["siteShortName"]))
+if(isset($_GET["siteName"]))
 echo ' - Site: <b>'.$_GET["siteName"].'</b>';
+else if(isset($_GET["siteShortName"]))
+echo ' - Site: <b>'.$siteName.'</b>';
 if(isset($_GET["lotNumber"]))
 echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';
  ?>
 <small><br>Note: Click on a column title to sort by that column</small>
 
 <ul class="tabs">	
-	<li <? if($_GET["poStatus"]==0 or !isset($_GET["poStatus"])) echo 'class="current"'; ?>>
+	<li <? if($_GET["poStatus"]==0 or $_GET["poStatus"]==0 or !isset($_GET["poStatus"])) echo 'class="current"'; ?>>
 		<a href='index.php?myAction=PO&poStatus=0<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
 		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
 		?>'>Outstanding</a>
@@ -53,13 +54,13 @@ echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';
 <table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 <thead>
   <tr>
-	<th align="center" style="width:100px !important;">PO #</th>
-	<th align="center" style="width:100px !important;">Site</th>
-	<th align="center" style="width:100px !important;">Lot</th>
+	<th align="center" style="width:60px !important;">PO #</th>
+	<th align="center" style="width:60px !important;">Lot</th>
+	<th align="center" style="width:150px !important;">Site</th>
 	<th align="center" style="width:90px !important;">Date Created</th>
     <th align="center" style="width:80px !important;">Account</th>
-	<th align="center" style="width:300px !important;">Description</th>
-	<th align="center" style="width:120px !important;">Trade assigned</th>
+	<th align="center" style="width:250px !important;">Description</th>
+	<th align="center" style="width:150px !important;">Trade assigned</th>
 	<!--<th align="center" style="width:40px !important;">Completed</th>-->
     <th align="center" style="width:100px !important;">Actions</th>
 </tr>
@@ -68,9 +69,10 @@ echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';
 
 require_once ("classes/misc_functions.php");
 
-$query = 'select poList.*, lineList.accountType, lineList.description, lineList.quantity, lineList.unitPrice, lineList.extPrice, sites.siteName from poList 
+$query = 'select poList.*,tradeList.name, lineList.accountType, lineList.description, lineList.quantity, lineList.unitPrice, lineList.extPrice, sites.siteName from poList 
 			left join sites on sites.siteShortName = poList.siteShortName
-			left join lineList on poList.id = lineList.poID';
+			left join lineList on poList.id = lineList.poID
+			left join tradeList on poList.vendorID= tradeList.id ';
 if(isset($_GET["poStatus"]))
 {
 $query = $query." where poList.poStatus = ".$_GET["poStatus"];
@@ -121,7 +123,7 @@ $query.= " order by poList.id DESC";
 			<? echo '<b><a href="index.php?myAction=PO&siteShortName='.$resultRow->siteShortName.'&siteName='.$resultRow->siteName.'">'.$resultRow->siteName.'</a></b>';?>
 		</td>
 		<td align="center">
-			<?= $resultRow->dateCreated ?>
+			<?= date('Y-m-d', strtotime($resultRow->dateCreated)) ?>
 		</td>
 		<td align="center">
 			<?= $resultRow->accountType ?>
@@ -130,7 +132,7 @@ $query.= " order by poList.id DESC";
 			<?= $resultRow->description ?>
 		</td>
 		<td align="center">
-			<?= $resultRow->vendorID ?>
+			<b><?= $resultRow->name ?></b>
 		</td>
 		<!--<td align="center">
 			<input style="min-height:24px;" type="checkbox" name="">

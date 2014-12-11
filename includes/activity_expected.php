@@ -52,7 +52,7 @@ if ($debug == "Yes") {
 $query = "select * from offerDetailViewSignedOnly where calculatedBuildCompletionDate is not null";
 
 $query = $query." order by siteShortName, lotNumber ";
-//echo '<br>'.$query;
+echo '<br>'.$query;
 
 $rowNum = 0;
 echo '<tbody>';

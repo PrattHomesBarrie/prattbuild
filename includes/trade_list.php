@@ -9,7 +9,8 @@ $(document).ready(function() {
                                     "bFilter": true,
                                     "bSort": true,
                                     "bInfo": true,
-    								 "bProcessing": false
+    								 "bProcessing": false,
+									 "aaSorting": []
                          });
                } ); 
 

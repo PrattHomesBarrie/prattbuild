@@ -1,13 +1,38 @@
+<?
+	$date=date("Y-m-d h:i:sa");
+	if($_GET["myPOAction"]=="View")
+	{
+		$query='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","View",'.$_GET["PONum"].',"'.$date.'")';
+		//$db->Query($query);
+		//echo $query;
+	}
+	
+	$query = 'select poList.*,sites.siteName from poList left join sites on sites.siteShortName = poList.siteShortName where id='.$_GET["PONum"];
+if ($db->Query($query)) 
+	{ 
+		while ($resultRow = $db->Row() ) {
+			$buildingNumber = $resultRow->buildingNumber;
+			$tradeID = $resultRow->vendorID;
+			$shiptoAdd = $resultRow->shiptoAdd;
+			//$description = $resultRow->description;
+			//$accountType = $resultRow->accountType;
+			$poStatus = $resultRow->poStatus;
+			$poSiteName = $resultRow->siteName;
+			$createdDate = date('Y-m-d', strtotime($resultRow->dateCreated));
+		}
+	}
+?>
 &nbsp;<? if(isset($_GET["PONum"])) echo '#'.$_GET["PONum"];?>
 <br><br>
 <form method="post" action="index.php?myAction=PO&myPOAction=Save<? if(isset($_GET["lotNumber"])) echo "&lotNumber=".$_GET["lotNumber"]; 
 		if(isset($_GET["siteShortName"])) echo "&siteShortName=".$_GET["siteShortName"];
+		echo '&siteName='.$poSiteName;
 		?>">
 <input type="hidden" name="id" value="<?= $_GET["PONum"]?>"/>
 <?php
 	if($_GET["myPOAction"]=="View")
 	{
-		echo "<button>Print</button>";
+		echo '<a target="_blank" href="./includes/poPDF.php?poStatus='.$poStatus.'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$_GET["PONum"].'&myPOAction=View"><input type="button" value="Print" /></a>';
 		echo '&nbsp;<input type="button" value="Back" onclick="javascript:window.history.back();">';
 	}
 	
@@ -18,20 +43,6 @@
 	}
 ?>
 <? 
-$query = 'select poList.*,sites.siteName from poList left join sites on sites.siteShortName = poList.siteShortName where id='.$_GET["PONum"];
-if ($db->Query($query)) 
-	{ 
-		while ($resultRow = $db->Row() ) {
-			$buildingNumber = $resultRow->buildingNumber;
-			$tradeID = $resultRow->vendorID;
-			$shiptoAdd = $resultRow->shiptoAdd;
-			//$description = $resultRow->description;
-			//$accountType = $resultRow->accountType;
-			$poStatus = $resultRow->poStatus;
-			$poSiteName = $resultRow->siteName;;
-		}
-	}
-	
 $query3 = 'select * from tradeList where status = 1';
 if($_GET["myPOAction"]=="View") {$query3 .= ' and id='.$tradeID;}
 $query3 .= ' order by name ASC';
@@ -94,8 +105,8 @@ echo
 	<div style="width:300px;float:left;margin-left:150px;">
 	<h3>Purchase Order</h3>
 	PO #: '.$_GET["PONum"].'
-	<br>Created date:
-	<br>Required date:
+	<br>Created date: '.$createdDate.
+	'<br>Required date:
 	</div>
 </div>
 <div style="width:1000px;clear:both;">
@@ -109,7 +120,7 @@ echo
 	if($_GET["myPOAction"]!="View")
 	echo 
 	'<select name="vendorID" style="height:29px;width:270px">
-		<option value="">
+		<option value="0">
 			Vendor\'s Name
 		</option>';
 	?>
@@ -267,7 +278,7 @@ echo
 	</div>
 	<? if($_GET["myPOAction"]=="Add") echo
 	'<div style="float:right;">
-		<br><a href="#"class="addRow" >+ Add Row</a>
+		<br><button type="button" href="#" class="addRow" title="Add Row">+ Add Row</button>
 	</div>';
 	?>
 </div>
