@@ -29,7 +29,7 @@ $db2->Query($query);
 		echo 
 		'<tr>
 		<td><input type="text" name="name" style="height:22px;width:99%;"/></td>
-		<td><input type="text" name="username" style="height:22px;width:99%;"/></td>
+		<td><input type="text" name="userName" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="password" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="address" style="height:22px;width:99%;"/></td>
 		<td><input type="text" name="phone"  style="height:22px;width:99%;"/></td>
@@ -63,7 +63,7 @@ $db2->Query($query);
 	<tr>
 		<input type="hidden" id="id" name="id" value="<? echo $row->id;  ?>" />
 		<td align="center"><input type="hidden" name="name" value="<? echo $row->name;  ?>" style="height:22px;width:99%;"/><? echo $row->name;  ?></td>
-		<td align="center"><input type="hidden" name="username" value="<? echo $row->username;  ?>" style="height:22px;width:99%;"/><? echo $row->username;  ?></td>
+		<td align="center"><input type="hidden" name="userName" value="<? echo $row->userName;  ?>" style="height:22px;width:99%;"/><? echo $row->userName;  ?></td>
 		<td align="center"><input type="text" name="password" value="<? echo $row->password;  ?>" style="height:22px;width:99%;"/></td>
 		<td align="center"><input type="text" name="address" value="<? echo $row->address;  ?>" style="height:22px;width:99%;"/></td>
 		<td align="center"><input type="text" name="phone" value="<? echo $row->phone;  ?>" style="height:22px;width:99%;"/></td>

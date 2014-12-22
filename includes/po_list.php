@@ -19,11 +19,11 @@ $(document).ready(function() {
 	require_once ("po_process.php");
 ?>
 <? 
-if(isset($_GET["siteName"]))
+if($_GET["siteName"]!="")
 echo ' - Site: <b>'.$_GET["siteName"].'</b>';
-else if(isset($_GET["siteShortName"]))
+else if($_GET["siteShortName"]!="")
 echo ' - Site: <b>'.$siteName.'</b>';
-if(isset($_GET["lotNumber"]))
+if($_GET["lotNumber"]!="")
 echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';
  ?>
 <small><br>Note: Click on a column title to sort by that column</small>
@@ -57,10 +57,10 @@ echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';
 	<th align="center" style="width:60px !important;">PO #</th>
 	<th align="center" style="width:60px !important;">Lot</th>
 	<th align="center" style="width:150px !important;">Site</th>
+	<th align="center" style="width:150px !important;">Trade assigned</th>
 	<th align="center" style="width:90px !important;">Date Created</th>
     <th align="center" style="width:80px !important;">Account</th>
 	<th align="center" style="width:250px !important;">Description</th>
-	<th align="center" style="width:150px !important;">Trade assigned</th>
 	<!--<th align="center" style="width:40px !important;">Completed</th>-->
     <th align="center" style="width:100px !important;">Actions</th>
 </tr>
@@ -69,7 +69,7 @@ echo ' - Lot: <b>'.$_GET["lotNumber"].'</b>';
 
 require_once ("classes/misc_functions.php");
 
-$query = 'select poList.*,tradeList.name, lineList.accountType, lineList.description, lineList.quantity, lineList.unitPrice, lineList.extPrice, sites.siteName from poList 
+$query = 'select poList.*,tradeList.name, lineList.accountType, lineList.description, lineList.quantity, lineList.note, lineList.lineStatus, sites.siteName from poList 
 			left join sites on sites.siteShortName = poList.siteShortName
 			left join lineList on poList.id = lineList.poID
 			left join tradeList on poList.vendorID= tradeList.id ';
@@ -88,6 +88,10 @@ if($_GET["siteShortName"]!="")
 if($_GET["lotNumber"]!="")
 {
 	$query = $query. " and poList.lotNumber=".$_GET["lotNumber"];
+}
+if($_GET["vendorID"]!="")
+{
+	$query = $query. " and poList.vendorID=".$_GET["vendorID"];
 }
 $query.= " order by poList.id DESC";
 ?>
@@ -123,6 +127,9 @@ $query.= " order by poList.id DESC";
 			<? echo '<b><a href="index.php?myAction=PO&siteShortName='.$resultRow->siteShortName.'&siteName='.$resultRow->siteName.'">'.$resultRow->siteName.'</a></b>';?>
 		</td>
 		<td align="center">
+			<? echo '<b><a href="index.php?myAction=PO&vendorID='.$resultRow->vendorID.'">'.$resultRow->name.'</a></b>'?>
+		</td>
+		<td align="center">
 			<?= date('Y-m-d', strtotime($resultRow->dateCreated)) ?>
 		</td>
 		<td align="center">
@@ -131,14 +138,11 @@ $query.= " order by poList.id DESC";
 		<td>
 			<?= $resultRow->description ?>
 		</td>
-		<td align="center">
-			<b><?= $resultRow->name ?></b>
-		</td>
 		<!--<td align="center">
 			<input style="min-height:24px;" type="checkbox" name="">
 		</td> -->
 		<td align="center">
-			<a title="Edit" href="<? echo 'index.php?myAction=PO&poStatus='.$_GET["poStatus"].'&siteShortName='.$resultRow->siteShortName.'&lotNumber='.$resultRow->lotNumber.'&PONum='.$resultRow->id.'&myPOAction=Edit' ?>"><img  src="./images/edit_icon1.png" /></a>
+			<a title="Edit" <? if(($securityCanDoPO) or ($resultRow->createdBy == $_SESSION["userName"])) echo""; else echo 'style="pointer-events: none; cursor: default;"';?> href="<? echo 'index.php?myAction=PO&poStatus='.$_GET["poStatus"].'&siteShortName='.$resultRow->siteShortName.'&lotNumber='.$resultRow->lotNumber.'&PONum='.$resultRow->id.'&myPOAction=Edit' ?>"><img  src="./images/<? if(($securityCanDoPO) or ($resultRow->createdBy == $_SESSION["userName"])) echo 'edit_icon1.png'; else echo 'edit_icon_black.png';?>" /></a>
 			<a title="View" href="<? echo 'index.php?myAction=PO&poStatus='.$_GET["poStatus"].'&siteShortName='.$resultRow->siteShortName.'&lotNumber='.$resultRow->lotNumber.'&PONum='.$resultRow->id.'&myPOAction=View' ?>"><img  src="./images/view_icon1.png" /></a>
 		</td>
 	</tr>

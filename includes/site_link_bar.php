@@ -23,7 +23,8 @@
 			echo 	'<ul>
 							<li><a href="index.php?myAction=AfterSS">After Sales Service</a></li>
 							<li><a href="index.php?myAction=PO">Purchase Order</a></li>';
-			if($securityCanDoTrade)
+			//if($securityCanDoTrade)
+			if ($securityLevelOneCheck)
 			echo '
 							<li><a href="index.php?myAction=Trade&tradeStatus=1">Trades</a></li>';
 			echo '

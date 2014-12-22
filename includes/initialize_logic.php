@@ -99,6 +99,17 @@ if ($validUser == true ) {
 	    or strtolower($userName) == 'hhansen'
 	    or strtolower($userName) == 'khansen'
 	    or strtolower($userName) == 'todd'
+	    or strtolower($userName) == 'bruno'
+		or strtolower($userName) == 'kath'
+		or strtolower($userName) == 'an.duong'
+		or strtolower($userName) == 'wendy'
+		) {
+			$securityCanDoPO = true;
+		}
+	if (  strtolower($userName) == 'doug@pratthomes.ca'
+	    or strtolower($userName) == 'hhansen'
+	    or strtolower($userName) == 'khansen'
+	    or strtolower($userName) == 'todd'
 		or strtolower($userName) == 'an.duong'
 		) {
 			$securityCanDoSettings  = true;

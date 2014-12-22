@@ -3,22 +3,26 @@
 	if($_GET["myPOAction"]=="View")
 	{
 		$query='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","View",'.$_GET["PONum"].',"'.$date.'")';
-		//$db->Query($query);
+		$db->Query($query);
 		//echo $query;
 	}
 	
-	$query = 'select poList.*,sites.siteName from poList left join sites on sites.siteShortName = poList.siteShortName where id='.$_GET["PONum"];
-if ($db->Query($query)) 
+	$query = 'select poList.*,sites.siteName, users.firstName, users.lastName from poList left join sites on sites.siteShortName = poList.siteShortName left join users on users.userName = poList.createdBy where id='.$_GET["PONum"];
+	//echo $query;
+	if ($db->Query($query)) 
 	{ 
 		while ($resultRow = $db->Row() ) {
 			$buildingNumber = $resultRow->buildingNumber;
 			$tradeID = $resultRow->vendorID;
+			$tradeIDBackCharge = $resultRow->vendorIDBackCharge;
 			$shiptoAdd = $resultRow->shiptoAdd;
 			//$description = $resultRow->description;
 			//$accountType = $resultRow->accountType;
 			$poStatus = $resultRow->poStatus;
 			$poSiteName = $resultRow->siteName;
-			$createdDate = date('Y-m-d', strtotime($resultRow->dateCreated));
+			$firstName = $resultRow->firstName;
+			$lastName = $resultRow->lastName;
+			$createdDate = date('Y-M-d', strtotime($resultRow->dateCreated));
 		}
 	}
 ?>
@@ -32,7 +36,7 @@ if ($db->Query($query))
 <?php
 	if($_GET["myPOAction"]=="View")
 	{
-		echo '<a target="_blank" href="./includes/poPDF.php?poStatus='.$poStatus.'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$_GET["PONum"].'&myPOAction=View"><input type="button" value="Print" /></a>';
+		echo '<a target="_blank" href="./includes/poPDF.php?poStatus='.$poStatus.'&siteShortName='.$_GET["siteShortName"].'&lotNumber='.$_GET["lotNumber"].'&PONum='.$_GET["PONum"].'&myPOAction=Print"><input type="button" value="Print" /></a>';
 		echo '&nbsp;<input type="button" value="Back" onclick="javascript:window.history.back();">';
 	}
 	
@@ -46,6 +50,10 @@ if ($db->Query($query))
 $query3 = 'select * from tradeList where status = 1';
 if($_GET["myPOAction"]=="View") {$query3 .= ' and id='.$tradeID;}
 $query3 .= ' order by name ASC';
+
+$query5 = 'select * from tradeList where status = 1';
+if($_GET["myPOAction"]=="View") {$query5 .= ' and id='.$tradeIDBackCharge;}
+$query5 .= ' order by name ASC';
 
 $query1 = 'select * from offerDetailView where 1=1';
 if(isset($_GET["lotNumber"])) 
@@ -88,13 +96,29 @@ $query4 .= ' and poID='.$_GET["PONum"];
         } 
     });
 });
+
+$(function() {
+	
+    $('#backCharge').on('change', function(){
+	console.log($('#backCharge').is(':checked'));
+	 
+        if($('#backCharge').is(':checked')) {
+            $('#vendorBackCharge').show();
+        } else {
+			$('#vendorBackCharge').hide();
+        } 
+    });
+});
 </script>
 <?
 if($_GET["myPOAction"]=="View")
 echo
 '<div style="width:1000px;display:block">
-	<div style="width:300px;float:left;margin-left:150px;">
-	<h3>Pratt Hansen Grougp Inc.</h3>
+	<div style="width:350px;float:left;margin-left:100px;">
+	<h3>';
+	if($_GET["siteShortName"] == "MAN" or $_GET["siteShortName"] == "UWS" or $_GET["siteShortName"] == "YST" or $_GET["siteShortName"] == "ESV") echo 'Pratt Hansen Grougp Inc.';
+	else echo 'H.Hansen Development Inc.';
+	echo '</h3>
 	301 King Street
 	<br>Barrie, Ontario
 	<br>L4N 6B5
@@ -106,8 +130,8 @@ echo
 	<h3>Purchase Order</h3>
 	PO #: '.$_GET["PONum"].'
 	<br>Created date: '.$createdDate.
-	'<br>Required date:
-	</div>
+	'<br>Created By: '.$firstName.' '.$lastName.
+	'</div>
 </div>
 <div style="width:1000px;clear:both;">
 <br>
@@ -168,6 +192,7 @@ echo
 				 '<br>Cell: '.$resultRow->otherPhone.
 				 '<br>Address: '.$resultRow->munStreetNumber.' '.$resultRow->munStreetAddress.' '.$resultRow->postalCode
 			;
+			$modelName = $resultRow->modelName;
 		}
 		
 		}
@@ -184,7 +209,7 @@ echo
 </div>
 <div style="width:1000px;">
 	<br>
-	<div style="width:450px;float:left;clear:both;">
+	<div style="width:350px;float:left;clear:both;">
 	<br><b>Re: </b>
 	Lot: <? 
 				if($_GET["siteShortName"]!=''){
@@ -195,15 +220,13 @@ echo
 						else echo '<input type="text" placeholder="building #" name="buildingNumber" value="'.$buildingNumber.'" style="width:60px;"/><span style="color:red;margin-left:5px;">*</span><br>';
 					}
 				else if(($_GET["lotNumber"])!='' and $_GET["lotNumber"]!=0) echo " ".$_GET["lotNumber"].", ";	
-				if(isset($poSiteName)) echo "Site: ".$poSiteName;	
+				if($_GET["myPOAction"]!="View") echo "Site: ".$siteName;	
+				else if($_GET["myPOAction"]=="View") echo "Site: ".$poSiteName;	
 				}
 				else {
 				echo ' <span id="poLotForm"><input type="text" style="width:60px;" name="lotNumber" id="lotNumber" value="'.$_GET["lotNumber"].'"/><span style="color:red;margin-left:5px;">*</span></span> ';
 				echo ' <span style="display:none" id="poSiteForm">Common Elements<br> Phase: Building <input type="text" placeholder="building #" name="buildingNumber" style="width:60px;" value="'.$buildingNumber.'"/><span style="color:red;margin-left:5px;">*</span></span><br>';
-				echo 'Site: ';
-				
-				
-				
+				echo '&nbsp;Site: ';
 				echo 
 				'<select name="siteShortName" style="height:29px;width:200px">
 					<option value="">
@@ -222,15 +245,52 @@ echo
 					while ($resultRow = $db->Row() ) {
 					echo $resultRow->siteName;
 				}}
-				
-				
 				}
 			?>
 	
 	</div>
-	<div style="width:300px;float:left;margin-left:250px;">
-		<br><b>Model:</b>
-	</div>
+	<? if($_GET["myPOAction"]!="View") {?>
+	<div style="width:350px;float:left;">
+	<br><b><label for="backCharge">Backcharge</label></b><input type="checkbox" <? if($tradeIDBackCharge) echo "checked ";?>id="backCharge" name="backCharge" />
+	<br>
+		<?if($_GET["myPOAction"]!="View")
+		{
+			echo 
+			'<div id="vendorBackCharge"';
+				if(!isset($tradeIDBackCharge))echo 'style="display:none;"';
+				echo '><select name="vendorIDBackCharge" style="height:29px;width:270px">
+				<option value="0">
+					Vendor\'s Name
+				</option>';
+			if ($db->Query($query3)) 
+			{ 
+				while ($resultRow = $db->Row() ) {
+				echo '<option value="'.$resultRow->id.'"';
+				if($tradeIDBackCharge == $resultRow->id) echo 'selected';
+				echo '>'. $resultRow->name.'</option>';
+			 }
+			echo '</select></div>';
+			}
+		}
+		echo '</div>';
+	} 
+	else if(isset($tradeIDBackCharge)){?>
+		<div style="width:350px;float:left;">
+		<br><b>Backcharge</b>
+		<br>
+		<? if ($db->Query($query5) && $_GET["myPOAction"]=="View") 
+		{
+		while ($resultRow = $db->Row() ) {
+		echo $resultRow->name;
+		}
+		echo '</div>';}?>
+	<? } ?>
+	
+	<? if(isset($modelName)) { 
+	echo '<div style="width:300px;float:left;">
+		<br><b>Model: </b>'.$modelName.
+	'</div>';
+	} ?>
 </div>
 
 <div style="width:1000px; clear:both;">	
@@ -286,12 +346,12 @@ echo
 	<table width="100%" border="1" cellpadding="0" cellspacing="0" class="tableLotData" id="lotListTable">
 		<thead>
 		  <tr>
-			<th align="center" style="width:100px !important;">Quantity</th>
+			<th align="center" style="width:100px !important;height:20px;">Quantity</th>
 			<th align="center" style="width:150px !important;">Account<span style="color:red;margin-left:5px;">*</span></th>
 			<!--<th align="center" style="width:150px !important;">Build Action</th> -->
 			<th align="center" style="width:350px !important;">Description<span style="color:red;margin-left:5px;">*</span></th>
-			<th align="center" style="width:150px !important;">Unit Price</th>
-			<th align="center" style="width:150px !important;">Ext. Price</th>
+			<th align="center" style="width:150px !important;">Note</th>
+			<th align="center" style="width:150px !important;">Completed</th>
 			<? //if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<th align="center">Action</th>' ;?>
 		</tr>
 		</thead>
@@ -303,28 +363,28 @@ echo
 					{
 			?>
 			<tr>
-				<td align="center">
-					1<input type="hidden" name="quantity_<?=  $resultRow->lineNumber?>" style="width:99%;" value ="1" />
+				<td align="center" style="height:20px;">
+					<input type="text" name="quantity_<?=  $resultRow->lineNumber?>" style="height:24px;width:99%;" value ="<?=  $resultRow->quantity?>" />
 				</td>
 				<td align="center">
 					<? if($_GET["myPOAction"]=="View") echo $resultRow->accountType; 
 					else {
 					?>
-					<input type="text" style="width:99%;" placeholder="Account" name="accountType_<?=  $resultRow->lineNumber?>" value ="<?= $resultRow->accountType ?>" />
+					<input type="text" style="height:24px;width:99%;" placeholder="Account" name="accountType_<?=  $resultRow->lineNumber?>" value ="<?= $resultRow->accountType ?>" />
 					<? } ?>
 				</td>
 				<td align="center">
 					<?
 					if($_GET["myPOAction"]=="View") echo $resultRow->description;
-					else echo '<input type="text" name="description_'.$resultRow->lineNumber.'" style="width:99%;" placeholder="Description" value ="'.$resultRow->description.'" />';
+					else echo '<input type="text" name="description_'.$resultRow->lineNumber.'" style="height:24px;width:99%;" placeholder="Description" value ="'.$resultRow->description.'" />';
 				
 				?>
 				</td>
 				<td align="center">
-					$0.00<input type="hidden" name="unitPrice_<?=  $resultRow->lineNumber?>" style="width:99%;" value ="0" />
+					<input type="text" name="note_<?=  $resultRow->lineNumber?>" placeholder="Note" style="height:24px;width:99%;" value ="<?=  $resultRow->note?>" />
 				</td>
 				<td align="center">
-					$.00<input type="hidden" name="extPrice_<?=  $resultRow->lineNumber?>" style="width:99%;" value ="0" />
+					<input style="min-height:24px;" type="checkbox" name="lineStatus_<?=  $resultRow->lineNumber?>" <? if($resultRow->lineStatus == 1) echo "checked";?> value="<?=  $resultRow->lineStatus?>">
 				</td>
 				<? //if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<td align="center"><input class="del" type="button" value="Delete" /></td>'; ?>
 			</tr>
@@ -336,35 +396,35 @@ echo
 			}
 			else {?>
 			<tr>
-				<td align="center">
-					1<input type="hidden" name="quantity_1" style="width:99%;" value ="1" />
+				<td align="center" style="height:20px;">
+					<input type="text" name="quantity_1" style="height:24px;width:99%;" value ="1" />
 				</td>
 				<td align="center">
-					<input type="text" style="width:99%;" placeholder="Account" name="accountType_1" value ="" />
+					<input type="text" style="height:24px;width:99%;" placeholder="Account" name="accountType_1" value ="" />
 				</td>
 				<td align="center">
-					<input type="text" name="description_1" style="width:99%;" placeholder="Description" value ="" />
+					<input type="text" name="description_1" style="height:24px;width:99%;" placeholder="Description" value ="" />
 				</td>
 				<td align="center">
-					$0.00<input type="hidden" name="unitPrice_1" style="width:99%;" value ="0" />
+					<input type="text" name="note_1" placeholder="Note" style="height:24px;width:99%;" value ="" />
 				</td>
 				<td align="center">
-					$.00<input type="hidden" name="extPrice_1" style="width:99%;" value ="0" />
+					<input style="min-height:24px;" type="checkbox" name="lineStatus_1" value="">
 				</td>
 				<? //if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<td align="center"><input class="del" type="button" value="Delete" /></td>'; ?>
 				<input type="hidden" name="lineNumber" id="lineNumber" value="1"/>
 			</tr>
 			<? } ?>
-			<tr style="background-color:grey;">
-				<td colspan="3">
+			<tr style="background-color:grey;height:20px;">
+				<td colspan="5">
 				
 				</td>
-				<td align="center">
+				<!--<td align="center">
 					<b>Total:</b>
 				</td>
 				<td align="center">
 				 <b>$0.00</b>
-				</td>
+				</td> -->
 				<? //if($_GET["myPOAction"]=="Add" or $_GET["myPOAction"]=="Edit") echo '<td></td>' ;?>
 			</tr>
 		</tbody>
@@ -391,11 +451,11 @@ echo
 					lineNumber++;
 					console.log(lineNumber);
 					var appendTxt = '<tr>'+
-					'<td align="center">1<input type="hidden" name="quantity_'+lineNumber+'" style="width:99%;" value ="1" />'+
-					'</td><td align="center"><input type="text" style="width:99%;" placeholder="Account" name="accountType_'+lineNumber+'" value ="" />'+
-					'</td><td align="center"><input type="text" name="description_'+lineNumber+'" style="width:99%;" placeholder="Description"  value ="" /></td>'+
-					'<td align="center">$0.00<input type="hidden" name="unitPrice_'+lineNumber+'" style="width:99%;" value ="0" /></td>'+
-					'<td align="center">$0.00<input type="hidden" name="extPrice_'+lineNumber+'" style="width:99%;" value ="0" /></td>'+
+					'<td align="center" style="height:20px;"><input type="text" name="quantity_'+lineNumber+'" style="width:99%;height:24px;" value ="1" />'+
+					'</td><td align="center"><input type="text" style="width:99%;height:24px;" placeholder="Account" name="accountType_'+lineNumber+'" value ="" />'+
+					'</td><td align="center"><input type="text" name="description_'+lineNumber+'" style="width:99%;height:24px;" placeholder="Description"  value ="" /></td>'+
+					'<td align="center"><input type="text" name="note_'+lineNumber+'" placeholder="Note" style="width:99%;height:24px;" value ="" /></td>'+
+					'<td align="center"><input type="checkbox" name="lineStatus_'+lineNumber+'" value ="" /></td>'+
 					'</tr>';
 					$("tr:last").prev().after(appendTxt);
 					$("#lineNumber").val(lineNumber);

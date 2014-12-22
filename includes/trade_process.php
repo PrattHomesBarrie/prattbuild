@@ -10,7 +10,7 @@
 		}
 		else if($_POST["name"]!='')
 		{
-		$query='INSERT INTO tradeList VALUES(NULL,"'.$_POST["name"].'","'.$_POST["username"].'","'.$_POST["password"].'","'.$_POST["address"].'","'.$_POST["phone"].'","'.$_POST["fax"].'","'.$_POST["email"].'",'.$_POST["status"].')';
+		$query='INSERT INTO tradeList VALUES(NULL,"'.$_POST["name"].'","'.$_POST["userName"].'","'.$_POST["password"].'","'.$_POST["address"].'","'.$_POST["phone"].'","'.$_POST["fax"].'","'.$_POST["email"].'",'.$_POST["status"].')';
 		$db->Query($query);
 		$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","'.$_GET["myTradeAction"].'","'.$_POST["name"].'","'.$date.'")';
 		$db->Query($query2);
@@ -21,7 +21,7 @@
 	//If ID is valid -> Edit a Trade
 	if($_GET["myTradeAction"]=="Save" && isset($_POST["id"]))
 	{
-	$query='UPDATE tradeList SET name="'.$_POST["name"].'",username="'.$_POST["username"].'",password="'.$_POST["password"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];
+	$query='UPDATE tradeList SET name="'.$_POST["name"].'",userName="'.$_POST["userName"].'",password="'.$_POST["password"].'", address="'.$_POST["address"].'",phone="'.$_POST["phone"].'",fax="'.$_POST["fax"].'",email="'.$_POST["email"].'",status='.$_POST["status"];
 	$query.=' where id='.$_POST["id"].' limit 1';
 	$db->Query($query);
 	$query2='INSERT INTO tradeHistory VALUES(NULL,"'.$_SESSION["userName"].'","Edit","'.$_POST["name"].'","'.$date.'")';

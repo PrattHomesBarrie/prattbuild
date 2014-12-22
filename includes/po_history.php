@@ -47,12 +47,16 @@ $(document).ready(function() {
 	<th align="center" style="width:150px !important;">Last Update</th>
 	<th align="center" style="width:100px !important;">User</th>
     <th align="center" style="width:100px !important;">Action</th>
-	<th align="center" style="width:300px !important;">PO Number</th>
+	<th align="center" style="width:100px !important;">PO Number</th>
+	<th align="center" style="width:200px !important;">Trade's assigned</th>
 </tr>
 </thead>
 <?php
 require_once ("classes/misc_functions.php");
-$query = 'select * from poHistory order by id DESC';
+$query = 'select poHistory.*,tradeList.name from poHistory 
+left join poList on poList.id = poHistory.poID
+left join tradeList on poList.vendorID= tradeList.id
+order by id DESC';
 ?>
 <tbody>
 	<? 
@@ -70,6 +74,9 @@ $query = 'select * from poHistory order by id DESC';
 		</td>
 		<td align="center">
 			<?= $resultRow->poID ?>
+		</td>
+		<td align="center">
+			<?= $resultRow->name ?>
 		</td>
 	</tr>
 	

@@ -43,29 +43,36 @@ if($_GET["myPOAction"]=="Save")
 		$query='INSERT INTO poList VALUES(NULL,"'.$date.'","'.$poSiteShortName.'",'.$poLotNumber.','.$_POST["vendorID"].',"'.$_POST["shiptoAdd"].'",';
 		if($_POST["buildingNumber"]) $query.=$_POST["buildingNumber"].',';
 		else $query.= 'NULL,';
-		$query.=$_POST["poStatus"].')';
-		$lineNumber = $_POST["lineNumber"];
+		$query.=$_POST["poStatus"].',"'.$_SESSION["userName"].'",'.$_POST["vendorIDBackCharge"].')';
+		
 		$db->Query($query);
+		$lineNumber = $_POST["lineNumber"];
 		$lastPOID= mysql_insert_id();
 		//echo $query;
 		//echo "last POID ".$lastPO;
 		//echo 'lineNumber '.$lineNumber;
+		if($lastPOID>0)
+		{
 		for($i=1;$i<= $lineNumber;$i++)
 			{
 				$quantity= "quantity_".$i;
 				$accountType= "accountType_".$i;
 				$description= "description_".$i;
-				$unitPrice= "unitPrice_".$i;
-				$extPrice= "extPrice_".$i;
-			
-		$query1='INSERT INTO lineList VALUES(NULL,'.$lastPOID.','.$i.','.$_POST[$quantity].',"'.$_POST[$accountType].'","'.$_POST[$description].'",'.$_POST[$unitPrice].','.$_POST[$extPrice].')';
+				$note= "note_".$i;
+				$lineStatus= "lineStatus_".$i;
+				if(isset($_POST[$lineStatus]))
+				$lineStatusValue = 1;
+				else $lineStatusValue = 0;
+				echo $_POST[$note] . 'note'.$note;
+		$query1='INSERT INTO lineList VALUES(NULL,'.$lastPOID.','.$i.','.$_POST[$quantity].',"'.$_POST[$accountType].'","'.$_POST[$description].'","'.$_POST[$note].'",'.$lineStatusValue.')';
 		$db->Query($query1);
 		//echo $query1;
+		}
 		}
 		if($lastPOID!=0)
 		{
 		$query2='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","Add","'.$lastPOID.'","'.$date.'")';
-		$db->Query($query2);
+		//$db->Query($query2);
 		//echo $query;
 		//echo '<br>'.$query2;
 		}
@@ -82,20 +89,36 @@ if($_GET["myPOAction"]=="Save")
 		$db->Query($query);
 		//echo $query;
 		$lineNumber = $_POST["lineNumber"];
+		$lineStatusValueTotal = 0;
 		//echo '<br>'.$query2;
 		for($i=1;$i<= $lineNumber;$i++)
 			{
 				$quantity= "quantity_".$i;
 				$accountType= "accountType_".$i;
 				$description= "description_".$i;
-				$unitPrice= "unitPrice_".$i;
-				$extPrice= "extPrice_".$i;
-			
-		$query1='UPDATE lineList SET lineNumber='.$i.',quantity='.$_POST[$quantity].',accountType="'.$_POST[$accountType].'",description="'.$_POST[$description].'",unitPrice='.$_POST[$unitPrice].',extPrice='.$_POST[$extPrice];
+				$note= "note_".$i;
+				$lineStatus= "lineStatus_".$i;
+				if(isset($_POST[$lineStatus]))
+				$lineStatusValue = 1;
+				else $lineStatusValue = 0;
+				$lineStatusValueTotal += $lineStatusValue;
+		$query1='UPDATE lineList SET lineNumber='.$i.',quantity='.$_POST[$quantity].',accountType="'.$_POST[$accountType].'",description="'.$_POST[$description].'",note="'.$_POST[$note].'",lineStatus='.$lineStatusValue;
 		$query1.=' where poID='.$_POST["id"].' and lineNumber='.$i.' limit 1';
 		$db->Query($query1);
 		//echo '<br>'.$query1;
 		}
+		//if $lineStatusValueTotal == $lineNumber -> update poStatus to completed
+		if($lineStatusValueTotal == $lineNumber)
+		{
+			$query='UPDATE poList SET poStatus=1 where id='.$_POST["id"].' limit 1';
+			$db->Query($query);
+		}
+		else 
+		{
+			$query='UPDATE poList SET poStatus=0 where id='.$_POST["id"].' limit 1';
+			$db->Query($query);
+		}
+		//update this action to history table
 		$query2='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","Edit","'.$_POST["id"].'","'.$date.'")';
 		$db->Query($query2);
 		}

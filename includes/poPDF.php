@@ -13,14 +13,15 @@ $db2->Query("SET time_zone = '-4:00';");
 $dbSingleUse->Query("SET time_zone = '-4:00';");
 
 $date=date("Y-m-d h:i:sa");
-	if($_GET["myPOAction"]=="View")
+	
+	if($_GET["myPOAction"]=="Print")
 	{
-		$query='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","View",'.$_GET["PONum"].',"'.$date.'")';
+		$query='INSERT INTO poHistory VALUES(NULL,"'.$_SESSION["userName"].'","Print",'.$_GET["PONum"].',"'.$date.'")';
 		//$db->Query($query);
 		//echo $query;
 	}
 	
-	$query = 'select poList.*,sites.siteName from poList left join sites on sites.siteShortName = poList.siteShortName where id='.$_GET["PONum"];
+	$query = 'select poList.*,sites.siteName, users.firstName, users.lastName from poList left join sites on sites.siteShortName = poList.siteShortName left join users on users.userName = poList.createdBy where id='.$_GET["PONum"];
 if ($db->Query($query)) 
 	{ 
 		while ($resultRow = $db->Row() ) {
@@ -31,12 +32,14 @@ if ($db->Query($query))
 			//$accountType = $resultRow->accountType;
 			$poStatus = $resultRow->poStatus;
 			$poSiteName = $resultRow->siteName;
-			$createdDate = date('Y-m-d', strtotime($resultRow->dateCreated));
+			$firstName = $resultRow->firstName;
+			$lastName = $resultRow->lastName;
+			$createdDate = date('Y-M-d', strtotime($resultRow->dateCreated));
 		}
 	}
 	
 	$query3 = 'select * from tradeList where status = 1';
-if($_GET["myPOAction"]=="View") {$query3 .= ' and id='.$tradeID;}
+if($_GET["myPOAction"]=="Print") {$query3 .= ' and id='.$tradeID;}
 $query3 .= ' order by name ASC';
 
 $query1 = 'select * from offerDetailView where 1=1';
@@ -46,7 +49,7 @@ if(isset($_GET["siteShortName"]))
 $query1 .=' and siteShortName = "'.$_GET["siteShortName"].'"';
 
 $query2 = 'select * from sites where siteID > 2';
-if($_GET["siteShortName"]!="" && $_GET["myPOAction"]=="View")
+if($_GET["siteShortName"]!="" && $_GET["myPOAction"]=="Print")
 $query2 .= ' and siteShortName='.$_GET["siteShortName"];
 
 $query4 = 'select * from lineList where 1=1';
@@ -54,13 +57,16 @@ if($_GET["PONum"]!="")
 $query4 .= ' and poID='.$_GET["PONum"];
 	ob_start();
     
-	$content='<page style="font-size: 10pt;margin:0 auto;width:800px;">
+	$content='<page style="font-size: 12pt;margin:0 auto;width:800px;">
 <span style="width:800px;clear:both;">
 </span>';
 $content.='<table  style="width:800px;"><tr>
 	<td style="width:100px;"></td>
 	<td style="width:300px;">
-	<h3>Pratt Hansen Grougp Inc.</h3>
+	<h3>';
+	if($_GET["siteShortName"] == "MAN" or $_GET["siteShortName"] == "UWS" or $_GET["siteShortName"] == "YST" or $_GET["siteShortName"] == "ESV") $content.= 'Pratt Hansen Grougp Inc.';
+	else $content.= 'H.Hansen Development Inc.';
+	$content.= '</h3>
 	301 King Street
 	<br>Barrie, Ontario
 	<br>L4N 6B5
@@ -70,10 +76,10 @@ $content.='<table  style="width:800px;"><tr>
 	<td style="width:50px;"></td>
 	<td style="width:300px;">
 	<h3>Purchase Order</h3>
-	PO #: '.$_GET["PONum"].'
-	<br>Created date: '.$createdDate.
-	'<br>Required date:
-	<br><br><br>
+	PO #: '.$_GET["PONum"].
+	'<br>Created By: '.$firstName.' '.$lastName.
+	'<br>Created date: '.$createdDate.
+	'<br><br><br>
 	</td>
 </tr></table>
 <span style="width:750px;clear:both;">
@@ -83,7 +89,7 @@ $content.='<table  style="width:800px;"><tr>
 <table style="width:800px;"><tr>
 	<td style="width:250px;">
 	<h3 style="padding-left: 0px;">Vendor</h3>';
-	if ($db->Query($query3) && $_GET["myPOAction"]=="View") 
+	if ($db->Query($query3) && $_GET["myPOAction"]=="Print") 
 		{
 		while ($resultRow = $db->Row() ) {
 		$content.= 
@@ -93,12 +99,12 @@ $content.='<table  style="width:800px;"><tr>
 	'<br>Fax: '.$resultRow->fax;
 	}}
 	$content.='</td>';
-	$content.= '<td align="center" style="width:270px;">
+	$content.= '<td align="center" style="width:270px;height:150px;">
 	<h3 style="padding-left: 0px;">Ship To</h3>';
-	$content.=$shiptoAdd;
-	$content.='<br><br><br><br></td>';
+	$content.='<span style="margin-top:0px;">'.$shiptoAdd.'</span>';
+	$content.='<br><br><br><br><br></td>';
 	if ($db->Query($query1) && isset($_GET["lotNumber"])) 
-		{ 
+		{
 		$content.= '<td style="width:230px;">
 				<h3 style="padding-left: 0px;">Reference</h3>';
 		while ($resultRow = $db->Row()) {
@@ -107,10 +113,15 @@ $content.='<table  style="width:800px;"><tr>
 				 '<br>Cell: '.$resultRow->otherPhone.
 				 '<br>Address: '.$resultRow->munStreetNumber.' '.$resultRow->munStreetAddress.' '.$resultRow->postalCode
 			;
+			$modelName = $resultRow->modelName;
 		}
-		
 		}
-	$content.='</td>';
+	if((!isset($_GET["lotNumber"]) or $_GET["lotNumber"]==0) && $_GET["myPOAction"]=="Print") 
+	$content.='Homeowner:
+			<br>Phone:
+			<br>Cell:
+			<br>Address:';
+	$content.='<br><br></td>';
 	$content.='</tr></table>';
 	$content.='<table style="width:800px;"><tr>
 	<br>
@@ -121,26 +132,26 @@ $content.='<table  style="width:800px;"><tr>
 					if($_GET["lotNumber"]=='' or $_GET["lotNumber"]==0)
 					{
 						$content.= ' Common Elements<br> Phase: Building ';
-						if($_GET["myPOAction"]=="View") $content.= $buildingNumber.'<br>';
+						if($_GET["myPOAction"]=="Print") $content.= $buildingNumber.'<br>';
 					}
 				else if(($_GET["lotNumber"])!='' and $_GET["lotNumber"]!=0) $content.= " ".$_GET["lotNumber"].", ";	
 				if(isset($poSiteName)) $content.= "Site: ".$poSiteName;	
 				}
 	$content.='</td>
-	<td style="width:400px;">
-		<br><b>Model:</b>
-	</td>';
-	$content.='</tr></table><br>';
+	<td style="width:120px;"></td>
+	<td style="width:280px;">';
+		if(isset($modelName)) $content.= '<br><br><br><b>Model: </b>'.$modelName;
+	$content.='</td></tr></table><br>';
 	
 	$content.='
 	<table style="width:100%;" border="1" cellpadding="0" cellspacing="0">
 		<thead>
 		  <tr>
-			<th align="center" style="width:80px;">Quantity</th>
+			<th align="center" style="width:80px;height:20px;">Quantity</th>
 			<th align="center" style="width:150px;">Account</th>
 			<th align="center" style="width:300px;">Description</th>
-			<th align="center" style="width:100px;">Unit Price</th>
-			<th align="center" style="width:100px;">Ext. Price</th>
+			<th align="center" style="width:200px;">Note</th>
+			<!--<th align="center" style="width:100px;">Ext. Price</th>-->
 		</tr>
 		</thead>
 		<tbody>';
@@ -150,7 +161,7 @@ $content.='<table  style="width:800px;"><tr>
 					while ($resultRow = $db->Row()) 
 					{
 					$content.='<tr>
-				<td align="center">
+				<td align="center" style="height:20px;">
 					1
 				</td>
 				<td align="center">'
@@ -159,18 +170,18 @@ $content.='<table  style="width:800px;"><tr>
 				<td align="center">'
 					.$resultRow->description.
 				'</td>
-				<td align="center">
+				<td align="center">'
+					.$resultRow->note.
+				'</td>
+				<!--<td align="center">
 					$0.00
-				</td>
-				<td align="center">
-					$.00
-				</td>
+				</td>-->
 				
 			</tr>';
 					}
 				}
 		$content.='<tr style="background-color:lightgrey;">
-				<td colspan="3">
+				<!--<td colspan="4">
 				
 				</td>
 				<td align="center">
@@ -178,12 +189,12 @@ $content.='<table  style="width:800px;"><tr>
 				</td>
 				<td align="center">
 				 <b>$0.00</b>
-				</td>
+				</td>-->
 			</tr>';
 	$content.='</tbody></table><br><br>';
 	$content.='<table border="1" style="width:800px;" cellpadding="0" cellspacing="0">';
-	$content.='<tr><td style="width:740px;"><b>Notes</b></td></tr>';
-	$content.='<tr><td style="width:740px;">- All above amounts are net of taxes.<br>';
+	$content.='<tr><td style="width:742px;height:20px;"><b>Notes</b></td></tr>';
+	$content.='<tr><td style="width:740px;"><br>- All above amounts are net of taxes.<br>';
 	$content.='- Not final until Approved.<br>';
 	$content.='- All invoice must quote a PO Number and delivery address. All materials and/or work must comply with all applicable building codes and regulations. All deliveries must be authorized by the site superintendent.
 				</td></tr>';
